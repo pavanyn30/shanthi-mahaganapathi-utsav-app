@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Ganapathi Festival</string>
+    <string name="title_activity_main">Ganapathi Festival</string>
+    <string name="package_name">com.ganapathifestival.app</string>
+    <string name="custom_url_scheme">com.ganapathifestival.app</string>
+</resources>

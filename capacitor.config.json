@@ -1,0 +1,6 @@
+{
+  "appId": "com.ganapathifestival.app",
+  "appName": "Ganapathi Festival",
+  "webDir": ".output/public",
+  "bundledWebRuntime": false
+}
