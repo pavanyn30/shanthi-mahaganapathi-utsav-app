@@ -326,11 +326,25 @@ function Home() {
 
         {/* Today's Schedule — Timeline (Festival Schedule Module) */}
         <section id="schedule" className="py-12 scroll-mt-20">
-          <SectionHeading
-            eyebrow="Daily programme"
-            title="Festival schedule"
-            action={{ to: "/schedule", label: "View All Schedules" }}
-          />
+          <div className="mb-6 space-y-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30">
+              <span>14 – 24 September 2026 · Chitradurga</span>
+            </div>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
+              Daily programme
+            </p>
+            <div className="flex items-end justify-between gap-4">
+              <h2 className="font-display text-2xl font-extrabold sm:text-3xl">
+                Festival schedule
+              </h2>
+              <Link
+                to="/schedule"
+                className="shrink-0 text-sm font-semibold text-primary hover:underline"
+              >
+                View All Schedules →
+              </Link>
+            </div>
+          </div>
 
           <div className="relative mt-8">
             {/* Vertical timeline line */}

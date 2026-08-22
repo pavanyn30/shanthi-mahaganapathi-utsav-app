@@ -171,12 +171,19 @@ function SchedulePage() {
         <div className="absolute -left-12 -bottom-12 h-56 w-56 rounded-full bg-orange-600/10 blur-3xl pointer-events-none" />
 
         <div className="relative z-10 space-y-3">
-          {/* DAILY PROGRAMME Subtitle */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-[0.2em] bg-amber-500/10 text-amber-500 border border-amber-500/30">
-            <span>DAILY PROGRAMME</span>
+          {/* ABOVE DAILY PROGRAMME: Date & Location Badge */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold bg-amber-500/15 text-amber-400 border border-amber-500/30 shadow-sm">
+            <span>14 – 24 September 2026 · Chitradurga</span>
           </div>
 
-          {/* Festival schedule Heading */}
+          {/* DAILY PROGRAMME Subtitle Badge */}
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-[0.25em] bg-stone-900/90 text-amber-500 border border-amber-500/30">
+              <span>DAILY PROGRAMME</span>
+            </div>
+          </div>
+
+          {/* BELOW DAILY PROGRAMME: Main Heading & Description */}
           <h1 className="font-display text-4xl sm:text-6xl font-extrabold text-stone-100 tracking-tight leading-[1.05]">
             Festival schedule
           </h1>
