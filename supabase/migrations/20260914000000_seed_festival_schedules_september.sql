@@ -1,41 +1,31 @@
--- Migration: Seed 14/09/2026, 15/09/2026, and 16/09/2026 Festival Schedules
+-- Migration: Clear default schedules and seed authentic Kannada Festival Schedule (14, 15, 16 Sep 2026)
 
--- 1. Ensure table exists
-CREATE TABLE IF NOT EXISTS public.festival_schedules (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    title TEXT NOT NULL,
-    description TEXT,
-    schedule_date DATE NOT NULL,
-    start_time TIME NOT NULL,
-    end_time TIME,
-    venue TEXT,
-    category TEXT DEFAULT 'pooja',
-    is_published BOOLEAN DEFAULT true,
-    sort_order INT DEFAULT 0,
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
-);
+-- 1. Truncate existing demo schedules and notification logs
+TRUNCATE TABLE public.festival_schedules CASCADE;
 
--- 2. Insert schedule records for 14, 15, 16 September 2026
+-- 2. Insert Official Kannada Schedule for 14-09-2026, 15-09-2026, and 16-09-2026
 INSERT INTO public.festival_schedules (title, description, schedule_date, start_time, end_time, venue, category, is_published, sort_order)
 VALUES
--- 14 Sep 2026
-('Prana Pratishtha & Maha Sankalpa', 'Grand invocation of Lord Ganesha with sacred Vedic chants and 108 Kalasha Abhishekam.', '2026-09-14', '06:30:00', '08:00:00', 'Main Sanctum', 'pooja', true, 1),
-('Prathama Ganapathi Homam', 'Sacred fire ritual offering 1,008 Modakas and herbal ahuti to Lord Vigneshwara.', '2026-09-14', '08:30:00', '10:30:00', 'Yajnashala', 'pooja', true, 2),
-('Day 1 Mahaprasada & Annadana', 'Devotional community meal served to thousands of visiting devotees.', '2026-09-14', '12:30:00', '15:00:00', 'Annadana Hall', 'prasadam', true, 3),
-('Dhol Tasha Pathak Performance', 'High-energy traditional drum troupe performance welcoming mandal devotees.', '2026-09-14', '17:00:00', '19:00:00', 'Pandal Ground', 'cultural', true, 4),
-('Grand Evening 108 Lamp Maha Aarti', 'Grand evening illumination and devotional bhajans led by Sri Ganapathi Mandal choir.', '2026-09-14', '19:30:00', '21:00:00', 'Main Pandal', 'aarti', true, 5),
+-- 14 Sep 2026 (ಸೋಮವಾರ)
+('ಶ್ರೀ ಶಾಂತಿ ಮಹಾಗಣಪತಿ ಪ್ರತಿಷ್ಠಾಪನ ಪೂಜೆ ಮತ್ತು ಮಹಾಮಂಗಳಾರತಿ', 'ಶ್ರೀ ಶಾಂತಿ ಮಹಾಗಣಪತಿ ಪ್ರತಿಷ್ಠಾಪನ ಪೂಜೆ ಮತ್ತು ಮಹಾಮಂಗಳಾರತಿ.', '2026-09-14', '10:30:00', '12:30:00', 'ಮುಖ್ಯ ಮಂಟಪ', 'pooja', true, 1),
+('ಪ್ರಸಾದ ವಿನಿಯೋಗ', 'ಪ್ರಸಾದ ವಿನಿಯೋಗ, ದಾಸೋಹಿಗಳ ಪರವಾಗಿ ಸೇವಾ ಸಮಿತಿಯಿಂದ.', '2026-09-14', '12:30:00', '15:00:00', 'ಅನ್ನದಾಸೋಹ ಮಂಟಪ', 'prasadam', true, 2),
+('ಕ್ರೀಡಾ ಚಟುವಟಿಕೆಗಳು', 'ಬಡಾವಣೆಗಳ ನಿವಾಸಿಗಳಿಗೆ ಮತ್ತು ಮಕ್ಕಳಿಗೆ ಕ್ರೀಡಾ ಚಟುವಟಿಕೆಗಳು.', '2026-09-14', '15:00:00', '18:30:00', 'ಬಡಾವಣೆಯ ಮೈದಾನ', 'event', true, 3),
+('ಶ್ರೀ ಶಾಂತಿಮಹಾಗಣಪತಿ ಪೂಜೆ ಮತ್ತು ಮಹಾಮಂಗಳಾರತಿ', 'ಸಂಜೆಯ ಶ್ರೀ ಶಾಂತಿಮಹಾಗಣಪತಿ ಪೂಜೆ ಮತ್ತು ಮಹಾಮಂಗಳಾರತಿ.', '2026-09-14', '18:30:00', '19:00:00', 'ಮುಖ್ಯ ಮಂಟಪ', 'aarti', true, 4),
+('ಪ್ರತಿಭಾ ಪುರಸ್ಕಾರ ಹಾಗೂ ಸಾಂಸ್ಕೃತಿಕ ಕಾರ್ಯಕ್ರಮಗಳು', '2026-ನೇ ಸಾಲಿನಲ್ಲಿ ಎಸ್.ಎಸ್.ಎಲ್.ಸಿ ಮತ್ತು ದ್ವಿತೀಯ ಪಿಯುಸಿಯಲ್ಲಿ ಉನ್ನತ ಶ್ರೇಣಿಯಲ್ಲಿ ತೇರ್ಗಡೆಯಾದ ವಿದ್ಯಾರ್ಥಿಗಳಿಗೆ ಪ್ರತಿಭಾ ಪುರಸ್ಕಾರ ಕಾರ್ಯಕ್ರಮ ಹಾಗೂ ಬಡಾವಣೆಯ ನಿವಾಸಿಗಳಿಂದ ಸಾಂಸ್ಕೃತಿಕ ಮತ್ತು ಮನರಂಜನೆ ಕಾರ್ಯಕ್ರಮಗಳು.', '2026-09-14', '19:00:00', '20:00:00', 'ಸಾಂಸ್ಕೃತಿಕ ರಂಗಮಂಟಪ', 'cultural', true, 5),
+('ರಾತ್ರಿಯ ಪ್ರಸಾದ ವಿನಿಯೋಗ', 'ಪ್ರಸಾದ ವಿನಿಯೋಗ, ದಾಸೋಹಿಗಳ ಪರವಾಗಿ ಸೇವಾ ಸಮಿತಿಯಿಂದ.', '2026-09-14', '20:00:00', '22:00:00', 'ಅನ್ನದಾಸೋಹ ಮಂಟಪ', 'prasadam', true, 6),
 
--- 15 Sep 2026
-('Morning Panchamrutha Abhishekam', 'Holy abhishekam with milk, honey, curd, and sugarcane juice followed by Sahasranama Archana.', '2026-09-15', '07:00:00', '08:30:00', 'Main Sanctum', 'pooja', true, 1),
-('Children''s Eco-Ganesha Clay Workshop', 'Eco-friendly clay modeling competition and Rangoli festival for kids & youth.', '2026-09-15', '10:00:00', '12:30:00', 'Cultural Stage', 'event', true, 2),
-('Day 2 Mahaprasadam Distribution', 'Sacred prasadam meals served to all visiting devotees.', '2026-09-15', '12:30:00', '14:30:00', 'Annadana Hall', 'prasadam', true, 3),
-('Carnatic & Devotional Music Night', 'Live vocal and instrumental performance by renowned classical artists.', '2026-09-15', '18:00:00', '19:30:00', 'Main Stage', 'cultural', true, 4),
-('Deepotsava & Night Aarti', 'Lighting 1,008 traditional brass lamps accompanied by devotional singing.', '2026-09-15', '19:30:00', '21:00:00', 'Main Sanctum', 'aarti', true, 5),
+-- 15 Sep 2026 (ಮಂಗಳವಾರ)
+('ಶ್ರೀ ಶಾಂತಿ ಮಹಾಗಣಪತಿ ಪೂಜೆ ಮತ್ತು ಮಹಾಮಂಗಳಾರತಿ', 'ಬೆಳಿಗ್ಗೆ ಶ್ರೀ ಶಾಂತಿ ಮಹಾಗಣಪತಿ ಪೂಜೆ ಮತ್ತು ಮಹಾಮಂಗಳಾರತಿ.', '2026-09-15', '09:00:00', '09:30:00', 'ಮುಖ್ಯ ಮಂಟಪ', 'pooja', true, 1),
+('ಬೆಳಗಿನ ಪ್ರಸಾದ ವಿನಿಯೋಗ', 'ಪ್ರಸಾದ ವಿನಿಯೋಗ, ದಾಸೋಹಿಗಳ ಪರವಾಗಿ ಸೇವಾ ಸಮಿತಿಯಿಂದ.', '2026-09-15', '09:30:00', '11:00:00', 'ಅನ್ನದಾಸೋಹ ಮಂಟಪ', 'prasadam', true, 2),
+('ಸಾಮೂಹಿಕ ಅನ್ನಸಂತರ್ಪಣೆ', 'ಸಾಮೂಹಿಕ ಅನ್ನಸಂತರ್ಪಣೆ, ಸಮಿತಿ ಪರವಾಗಿ ದಾಸೋಹಿಗಳಿಂದ.', '2026-09-15', '13:00:00', '16:00:00', 'ಅನ್ನದಾಸೋಹ ಮಂಟಪ', 'prasadam', true, 3),
+('ಶ್ರೀ ಶಾಂತಿ ಮಹಾಗಣಪತಿ ಪೂಜೆ ಮತ್ತು ಮಹಾಮಂಗಳಾರತಿ', 'ಸಂಜೆಯ ಶ್ರೀ ಶಾಂತಿ ಮಹಾಗಣಪತಿ ಪೂಜೆ ಮತ್ತು ಮಹಾಮಂಗಳಾರತಿ.', '2026-09-15', '18:30:00', '19:00:00', 'ಮುಖ್ಯ ಮಂಟಪ', 'aarti', true, 4),
+('ಮಾಜಿ ಸೈನಿಕರಿಗೆ ಅಭಿನಂದನೆ & ಬಹುಮಾನ ವಿತರಣಾ ಸಮಾರಂಭ', 'ಬಡಾವಣೆಗಳ ಮಾಜಿ ಸೈನಿಕರಿಗೆ ಅಭಿನಂದನಾ ಕಾರ್ಯಕ್ರಮ, ಪ್ರಸಾದ-ಅನ್ನಸಂತರ್ಪಣೆ ಹಾಗೂ ಪ್ರಾಯೋಜಕರಿಗೆ, ಹೂವಿನ ಹರಾಜು ದಾನಿಗಳಿಗೆ ನೆನಪಿನ ಕಾಣಿಕೆ ವಿತರಣೆ, ಸಾಂಸ್ಕೃತಿಕ ಇನ್ನಿತರೆ ಕ್ರೀಡೆಯಲ್ಲಿ ವಿಜೇತರಾದವರಿಗೆ ಬಹುಮಾನ ವಿತರಣೆ ಹಾಗೂ ನಿವಾಸಿಗಳಿಂದ ಸಾಂಸ್ಕೃತಿಕ ಮತ್ತು ಮನರಂಜನೆ ಕಾರ್ಯಕ್ರಮಗಳು.', '2026-09-15', '19:00:00', '20:00:00', 'ಸಾಂಸ್ಕೃತಿಕ ರಂಗಮಂಟಪ', 'cultural', true, 5),
+('ರಾತ್ರಿಯ ಪ್ರಸಾದ ವಿನಿಯೋಗ', 'ಪ್ರಸಾದ ವಿನಿಯೋಗ, ದಾಸೋಹಿಗಳ ಪರವಾಗಿ ಸೇವಾ ಸಮಿತಿಯಿಂದ.', '2026-09-15', '20:00:00', '22:00:00', 'ಅನ್ನದಾಸೋಹ ಮಂಟಪ', 'prasadam', true, 6),
 
--- 16 Sep 2026
-('Uttarapooja & Maha Mangalarathi', 'Special farewell pooja and final morning blessings.', '2026-09-16', '07:30:00', '09:00:00', 'Main Sanctum', 'pooja', true, 1),
-('Grand Shobhayatra Procession', 'Royal procession through city streets with flower chariot, folk dances & Dhol Tasha.', '2026-09-16', '10:30:00', '13:30:00', 'Festival Pandal to Lake', 'event', true, 2),
-('Visarjan Prasadam Distribution', 'Special sweets and snacks served along the procession route.', '2026-09-16', '13:30:00', '15:30:00', 'Procession Route', 'prasadam', true, 3),
-('Eco-Friendly Idol Visarjan Ritual', 'Sacred immersion ceremony at lakefront with floral tributes and Ganapathi Bappa Morya chants.', '2026-09-16', '17:00:00', '19:30:00', 'Holy Lake Front', 'aarti', true, 4)
-ON CONFLICT DO NOTHING;
+-- 16 Sep 2026 (ಬುಧವಾರ)
+('ಶ್ರೀ ಶಾಂತಿ ಮಹಾಗಣಪತಿ ಪೂಜೆ ಮತ್ತು ಮಹಾಮಂಗಳಾರತಿ', 'ಬೆಳಿಗ್ಗೆ ಶ್ರೀ ಶಾಂತಿ ಮಹಾಗಣಪತಿ ಪೂಜೆ ಮತ್ತು ಮಹಾಮಂಗಳಾರತಿ.', '2026-09-16', '09:00:00', '09:30:00', 'ಮುಖ್ಯ ಮಂಟಪ', 'pooja', true, 1),
+('ಬೆಳಗಿನ ಪ್ರಸಾದ ವಿನಿಯೋಗ', 'ಪ್ರಸಾದ ವಿನಿಯೋಗ, ದಾಸೋಹಿಗಳ ಪರವಾಗಿ ಸೇವಾ ಸಮಿತಿಯಿಂದ.', '2026-09-16', '09:30:00', '11:00:00', 'ಅನ್ನದಾಸೋಹ ಮಂಟಪ', 'prasadam', true, 2),
+('ಮಧ್ಯಾಹ್ನದ ಪ್ರಸಾದ ವಿನಿಯೋಗ', 'ಪ್ರಸಾದ ವಿನಿಯೋಗ, ದಾಸೋಹಿಗಳ ಪರವಾಗಿ ಸೇವಾ ಸಮಿತಿಯಿಂದ.', '2026-09-16', '13:00:00', '14:00:00', 'ಅನ್ನದಾಸೋಹ ಮಂಟಪ', 'prasadam', true, 3),
+('ಶ್ರೀ ಶಾಂತಿ ಮಹಾಗಣಪತಿಯ ಹೂವಿನಹಾರ ಮತ್ತು ಇತರೆ ಹರಾಜು', 'ಶ್ರೀ ಶಾಂತಿ ಮಹಾಗಣಪತಿಯ ಹೂವಿನಹಾರ ಮತ್ತು ಇತರೆ ಹಾರಗಳ ಬಹಿರಂಗ ಹರಾಜು ಕಾರ್ಯಕ್ರಮ.', '2026-09-16', '14:00:00', '15:00:00', 'ಮುಖ್ಯ ಮಂಟಪ', 'event', true, 4),
+('ವಿಸರ್ಜನಾ ಮೆರವಣಿಗೆ ಪ್ರಾರಂಭ & ಚಂದ್ರವಳ್ಳಿಯಲ್ಲಿ ವಿಸರ್ಜನೆ', 'ವಿವಿಧ ವಾದ್ಯ ತಂಡಗಳೊಂದಿಗೆ ಎಲ್ಲಾ ಬಡಾವಣೆಗಳ ನಿವಾಸಿಗಳ ಭಾಗವಹಿಸುವಿಕೆಯೊಂದಿಗೆ ಶ್ರೀ ಶಾಂತಿ ಮಹಾಗಣಪತಿಯ ವಿಜೃಂಭಣೆಯ ವಿಸರ್ಜನಾ ಮೆರವಣಿಗೆ ಪ್ರಾರಂಭ ಹಾಗೂ ಚಂದ್ರವಳ್ಳಿಯಲ್ಲಿ ವಿಸರ್ಜನೆ.', '2026-09-16', '15:00:00', '19:00:00', 'ಮೆರವಣಿಗೆ ಮಾರ್ಗದಿಂದ ಚಂದ್ರವಳ್ಳಿಕೆರೆ', 'event', true, 5),
+('ಮೆರವಣಿಗೆ ಅಂತ್ಯದಲ್ಲಿ ಪ್ರಸಾದ ವಿನಿಯೋಗ', 'ಮೆರವಣಿಗೆ ಅಂತ್ಯದಲ್ಲಿ ಪ್ರಸಾದ ವಿನಿಯೋಗ, ದಾಸೋಹಿಗಳ ಪರವಾಗಿ ಸೇವಾ ಸಮಿತಿಯಿಂದ.', '2026-09-16', '19:00:00', '21:00:00', 'ಚಂದ್ರವಳ್ಳಿಕೆರೆ / ವಿಸರ್ಜನಾ ಸ್ಥಳ', 'prasadam', true, 6);
