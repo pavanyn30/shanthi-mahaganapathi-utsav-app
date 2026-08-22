@@ -29,6 +29,7 @@ import { Route as EventsIndexRouteImport } from './routes/events.index'
 import { Route as EventsSlugRouteImport } from './routes/events.$slug'
 import { Route as NotificationIdRouteImport } from './routes/notification.$id'
 import { Route as ProfileIdRouteImport } from './routes/profile.$id'
+import { Route as ScheduleIndexRouteImport } from './routes/schedule.index'
 import { Route as ScheduleIdRouteImport } from './routes/schedule.$id'
 import { Route as VideoIdRouteImport } from './routes/video.$id'
 
@@ -132,6 +133,11 @@ const ProfileIdRoute = ProfileIdRouteImport.update({
   path: '/profile/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ScheduleIndexRoute = ScheduleIndexRouteImport.update({
+  id: '/schedule/',
+  path: '/schedule/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ScheduleIdRoute = ScheduleIdRouteImport.update({
   id: '/schedule/$id',
   path: '/schedule/$id',
@@ -165,6 +171,7 @@ export interface FileRoutesByFullPath {
   '/schedule/$id': typeof ScheduleIdRoute
   '/video/$id': typeof VideoIdRoute
   '/events/': typeof EventsIndexRoute
+  '/schedule/': typeof ScheduleIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -188,6 +195,7 @@ export interface FileRoutesByTo {
   '/schedule/$id': typeof ScheduleIdRoute
   '/video/$id': typeof VideoIdRoute
   '/events': typeof EventsIndexRoute
+  '/schedule': typeof ScheduleIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -213,6 +221,7 @@ export interface FileRoutesById {
   '/schedule/$id': typeof ScheduleIdRoute
   '/video/$id': typeof VideoIdRoute
   '/events/': typeof EventsIndexRoute
+  '/schedule/': typeof ScheduleIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -238,6 +247,7 @@ export interface FileRouteTypes {
     | '/schedule/$id'
     | '/video/$id'
     | '/events/'
+    | '/schedule/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -261,6 +271,7 @@ export interface FileRouteTypes {
     | '/schedule/$id'
     | '/video/$id'
     | '/events'
+    | '/schedule'
   id:
     | '__root__'
     | '/'
@@ -285,6 +296,7 @@ export interface FileRouteTypes {
     | '/schedule/$id'
     | '/video/$id'
     | '/events/'
+    | '/schedule/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -307,6 +319,7 @@ export interface RootRouteChildren {
   ScheduleIdRoute: typeof ScheduleIdRoute
   VideoIdRoute: typeof VideoIdRoute
   EventsIndexRoute: typeof EventsIndexRoute
+  ScheduleIndexRoute: typeof ScheduleIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -451,6 +464,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/schedule/': {
+      id: '/schedule/'
+      path: '/schedule'
+      fullPath: '/schedule/'
+      preLoaderRoute: typeof ScheduleIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/schedule/$id': {
       id: '/schedule/$id'
       path: '/schedule/$id'
@@ -503,6 +523,7 @@ const rootRouteChildren: RootRouteChildren = {
   ScheduleIdRoute: ScheduleIdRoute,
   VideoIdRoute: VideoIdRoute,
   EventsIndexRoute: EventsIndexRoute,
+  ScheduleIndexRoute: ScheduleIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

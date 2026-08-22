@@ -12,6 +12,7 @@ export function Footer() {
   const [developerModalOpen, setDeveloperModalOpen] = useState(false);
 
   const exploreLinks = [
+    { to: "/schedule", label: "Festival Schedule" },
     { to: "/events", label: "Events" },
     ...(isDonateEnabled ? [{ to: "/donate", label: "Donate / Seva" }] : []),
     { to: "/live", label: "Live" },

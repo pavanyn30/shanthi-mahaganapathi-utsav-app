@@ -25,6 +25,7 @@ import { DeveloperCreditModal } from "./DeveloperCreditModal";
 
 const NAV = [
   { to: "/", label: "Home" },
+  { to: "/schedule", label: "Schedule" },
   { to: "/events", label: "Events" },
   { to: "/notifications", label: "Alerts" },
   { to: "/donate", label: "Donate" },

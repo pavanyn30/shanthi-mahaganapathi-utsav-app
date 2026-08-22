@@ -76,6 +76,7 @@ import {
 import { PaymentSettingsTab } from "@/components/features/admin/PaymentSettingsTab";
 import { PushNotificationAdminTab } from "@/components/features/admin/PushNotificationAdminTab";
 import { SplashScreenAdminTab } from "@/components/features/admin/SplashScreenAdminTab";
+import { FestivalScheduleAdminTab } from "@/components/features/admin/FestivalScheduleAdminTab";
 import { downloadDonationInvoicePDF } from "@/routes/donate";
 import {
   announcementsQuery,
@@ -775,6 +776,17 @@ function AdminPage() {
           </Badge>
         </TabsTrigger>
         <TabsTrigger
+          value="schedules"
+          className="w-full justify-between rounded-xl px-3.5 py-2.5 text-xs font-semibold data-[state=active]:gradient-saffron data-[state=active]:text-primary-foreground transition-all"
+        >
+          <span className="flex items-center gap-2.5">
+            <Clock className="h-4 w-4 text-amber-500" /> Festival Schedule
+          </span>
+          <Badge variant="outline" className="text-[10px] px-1.5 py-0 font-bold border-amber-500/40 text-amber-600">
+            {schedules.length}
+          </Badge>
+        </TabsTrigger>
+        <TabsTrigger
           value="events"
           className="w-full justify-between rounded-xl px-3.5 py-2.5 text-xs font-semibold data-[state=active]:gradient-saffron data-[state=active]:text-primary-foreground transition-all"
         >
@@ -1074,6 +1086,11 @@ function AdminPage() {
               </div>
             )}
           </div>
+
+          {/* FESTIVAL SCHEDULE TAB */}
+          <TabsContent value="schedules" className="m-0 space-y-6">
+            <FestivalScheduleAdminTab />
+          </TabsContent>
 
           {/* PUSH NOTIFICATIONS TAB */}
           <TabsContent value="notifications" className="m-0 space-y-6">

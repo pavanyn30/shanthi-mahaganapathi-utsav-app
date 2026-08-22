@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
@@ -86,10 +87,26 @@ function Home() {
 
   const visitors = stats?.liveVisitors ?? 1250;
 
-  // Local YYYY-MM-DD date calculation
+  // Local YYYY-MM-DD date calculation for dynamic filtering
   const today = new Date().toLocaleDateString("en-CA");
   const upcoming = events.filter((e) => e.event_date >= today || e.is_published).slice(0, 6);
-  const activeSchedules = schedules.filter((s) => s.is_published !== false);
+
+  const publishedSchedules = useMemo(
+    () => schedules.filter((s) => s.is_published !== false),
+    [schedules],
+  );
+
+  // Dynamic today's schedule filtering
+  const todaySchedules = useMemo(() => {
+    const matched = publishedSchedules.filter((s) => s.schedule_date === today);
+    if (matched.length > 0) return matched;
+
+    // Fallback if today's date is not in festival range (e.g. testing before Sep 14)
+    const sep14Items = publishedSchedules.filter((s) => s.schedule_date === "2026-09-14");
+    if (sep14Items.length > 0) return sep14Items;
+
+    return publishedSchedules.slice(0, 5);
+  }, [publishedSchedules, today]);
 
   return (
     <>
@@ -275,14 +292,18 @@ function Home() {
 
         {/* Today's Schedule — Timeline (Festival Schedule Module) */}
         <section id="schedule" className="py-12 scroll-mt-20">
-          <SectionHeading eyebrow="Daily programme" title="Festival schedule" />
+          <SectionHeading
+            eyebrow="Daily programme"
+            title="Festival schedule"
+            action={{ to: "/schedule", label: "View All Schedules" }}
+          />
 
-          <div className="relative mt-10">
+          <div className="relative mt-8">
             {/* Vertical timeline line */}
             <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary via-amber-500/50 to-transparent sm:left-8" />
 
             <div className="space-y-6">
-              {activeSchedules.map((s) => (
+              {todaySchedules.map((s) => (
                 <div key={s.id} className="relative flex items-start gap-4 sm:gap-6">
                   {/* Timeline node */}
                   <div className="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full gradient-saffron text-primary-foreground shadow-warm ring-4 ring-background sm:h-14 sm:w-14">
@@ -295,8 +316,13 @@ function Home() {
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-2">
                           {s.schedule_date && (
-                            <Badge variant="outline" className="rounded-full text-[10px]">
-                              {s.schedule_date}
+                            <Badge variant="outline" className="rounded-full text-[10px] border-amber-500/40 text-amber-600 dark:text-amber-400">
+                              {s.schedule_date === today ? "Today's Schedule" : s.schedule_date}
+                            </Badge>
+                          )}
+                          {s.category && (
+                            <Badge variant="secondary" className="rounded-full text-[10px] uppercase font-bold">
+                              {s.category}
                             </Badge>
                           )}
                         </div>
@@ -326,6 +352,20 @@ function Home() {
                   </div>
                 </div>
               ))}
+            </div>
+
+            {/* Bottom View All CTA Button */}
+            <div className="mt-8 text-center sm:text-left pl-14 sm:pl-20">
+              <Button
+                asChild
+                variant="outline"
+                className="rounded-full border-amber-500/40 hover:bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold text-xs px-6 py-2.5"
+              >
+                <Link to="/schedule">
+                  <span>View All 3 Days Schedule (14, 15, 16 Sep)</span>
+                  <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                </Link>
+              </Button>
             </div>
           </div>
         </section>
