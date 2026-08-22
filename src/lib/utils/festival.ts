@@ -582,13 +582,89 @@ export const sponsorsQuery = {
     unwrap<Sponsor[]>(await supabase.from("sponsors").select("*").order("sort_order")),
 };
 
+export const DEFAULT_GALLERY_ITEMS: GalleryItem[] = [
+  {
+    id: "g-1",
+    title: "Grand Ganapathi Sthapana & First Aarti (2026)",
+    category: "aarti",
+    media_url: "https://images.unsplash.com/photo-1631169920665-3b8b0e5a7ede?w=1200",
+    video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+    thumbnail_url: "https://images.unsplash.com/photo-1631169920665-3b8b0e5a7ede?w=1200",
+    media_type: "video",
+    likes: 342,
+    is_featured: true,
+  },
+  {
+    id: "g-2",
+    title: "Dhol Tasha Pathak Energetic Performance (2026)",
+    category: "cultural",
+    media_url: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1200",
+    video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+    thumbnail_url: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1200",
+    media_type: "video",
+    likes: 512,
+    is_featured: true,
+  },
+  {
+    id: "g-3",
+    title: "Grand Visarjan Miravand Procession Highlights (2026)",
+    category: "visarjan",
+    media_url: "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1200",
+    video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+    thumbnail_url: "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1200",
+    media_type: "video",
+    likes: 630,
+    is_featured: true,
+  },
+  {
+    id: "g-4",
+    title: "Eco-Friendly Clay Idol Craftsmanship (2026)",
+    category: "photos",
+    media_url: "https://images.unsplash.com/photo-1604608672516-f1b9b1a0a1d9?w=1200",
+    media_type: "image",
+    likes: 189,
+    is_featured: false,
+  },
+  {
+    id: "g-5",
+    title: "108 Lamp Maha Deepotsav Aarti (2026)",
+    category: "aarti",
+    media_url: "https://images.unsplash.com/photo-1567591370504-c1b1a3f66c6a?w=1200",
+    media_type: "image",
+    likes: 276,
+    is_featured: false,
+  },
+  {
+    id: "g-6",
+    title: "Annual Children Rangoli & Drawing Contest (2026)",
+    category: "cultural",
+    media_url: "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=1200",
+    media_type: "image",
+    likes: 145,
+    is_featured: false,
+  },
+  {
+    id: "g-7",
+    title: "Cultural Night Classical Concert (2025)",
+    category: "cultural",
+    media_url: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1200",
+    video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+    thumbnail_url: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1200",
+    media_type: "video",
+    likes: 176,
+    is_featured: true,
+  },
+];
+
 export const galleryQuery = {
   queryKey: ["gallery"],
   placeholderData: (prevData: any) => prevData,
-  queryFn: async () =>
-    unwrap<GalleryItem[]>(
+  queryFn: async () => {
+    const res = unwrap<GalleryItem[]>(
       await supabase.from("gallery_items").select("*").order("created_at", { ascending: false }),
-    ),
+    );
+    return res && res.length > 0 ? res : DEFAULT_GALLERY_ITEMS;
+  },
 };
 
 export const donationsQuery = {
