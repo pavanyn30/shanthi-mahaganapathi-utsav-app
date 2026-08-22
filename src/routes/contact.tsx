@@ -213,11 +213,6 @@ function ContactCard({ type, icon: Icon, title, value, actionText }: ContactCard
       <p className="mt-1 text-base font-bold text-foreground break-words group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors flex items-center gap-1.5">
         <span>{value}</span>
       </p>
-
-      <div className="mt-2 text-[11px] text-muted-foreground/80 flex items-center gap-1 group-hover:text-amber-500 transition-colors">
-        <Copy className="h-3 w-3 shrink-0" />
-        <span>Tap to copy number &amp; open call dialer</span>
-      </div>
     </button>
   );
 }
