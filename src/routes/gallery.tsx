@@ -294,7 +294,7 @@ function GalleryPage() {
   const queryClient = useQueryClient();
   const { data: dbItems = [] } = useQuery(galleryQuery);
 
-  const [selectedYear, setSelectedYear] = useState<number | "all">("all");
+  const [selectedYear, setSelectedYear] = useState<number>(2026);
   const [selectedMedia, setSelectedMedia] = useState<GalleryItem | null>(null);
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
   const [downloadState, setDownloadState] = useState<
@@ -379,9 +379,8 @@ function GalleryPage() {
   }, [uniqueItems, memoryYears]);
 
   const currentYearItems = useMemo(() => {
-    if (selectedYear === "all") return uniqueItems;
     return itemsByYear[selectedYear] || [];
-  }, [itemsByYear, selectedYear, uniqueItems]);
+  }, [itemsByYear, selectedYear]);
 
   const handleShareMedia = async (item: GalleryItem, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
@@ -478,41 +477,20 @@ function GalleryPage() {
 
         {/* 2. YEAR FILTER SEGMENTED PILLS BAR */}
         <div className="flex items-center justify-center gap-2 sm:gap-3 mb-8 overflow-x-auto py-1 no-scrollbar">
-          <button
-            type="button"
-            onClick={() => setSelectedYear("all")}
-            className={`px-5 py-2 sm:px-6 sm:py-2.5 rounded-2xl text-xs sm:text-sm font-extrabold transition-all duration-300 flex items-center gap-1.5 ${
-              selectedYear === "all"
-                ? "bg-amber-500 text-slate-950 shadow-lg scale-105"
-                : "bg-slate-900/80 text-slate-400 hover:text-slate-200 border border-slate-800"
-            }`}
-          >
-            <span>All Years</span>
-            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/20 text-current">
-              {uniqueItems.length}
-            </span>
-          </button>
-
-          {memoryYears.map((yr) => {
-            const count = (itemsByYear[yr] || []).length;
-            return (
-              <button
-                key={yr}
-                type="button"
-                onClick={() => setSelectedYear(yr)}
-                className={`px-5 py-2 sm:px-6 sm:py-2.5 rounded-2xl text-xs sm:text-sm font-extrabold transition-all duration-300 flex items-center gap-1.5 ${
-                  selectedYear === yr
-                    ? "bg-amber-500 text-slate-950 shadow-lg scale-105"
-                    : "bg-slate-900/80 text-slate-400 hover:text-slate-200 border border-slate-800"
-                }`}
-              >
-                <span>{yr}</span>
-                <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/20 text-current">
-                  {count}
-                </span>
-              </button>
-            );
-          })}
+          {memoryYears.map((yr) => (
+            <button
+              key={yr}
+              type="button"
+              onClick={() => setSelectedYear(yr)}
+              className={`px-5 py-2 sm:px-6 sm:py-2.5 rounded-2xl text-xs sm:text-sm font-extrabold transition-all duration-300 ${
+                selectedYear === yr
+                  ? "bg-amber-500 text-slate-950 shadow-lg scale-105"
+                  : "bg-slate-900/80 text-slate-400 hover:text-slate-200 border border-slate-800"
+              }`}
+            >
+              {yr}
+            </button>
+          ))}
         </div>
 
         {/* 3. FEATURED HIGHLIGHT COLLAGE GRID */}
