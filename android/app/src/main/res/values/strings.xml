@@ -1,7 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Ganapathi Festival</string>
-    <string name="title_activity_main">Ganapathi Festival</string>
-    <string name="package_name">com.ganapathifestival.app</string>
-    <string name="custom_url_scheme">com.ganapathifestival.app</string>
+    <string name="app_name">SHANTHI MAHA GANAPATHI 2026</string>
+    <string name="title_activity_main">SHANTHI MAHA GANAPATHI 2026</string>
+    <string name="package_name">com.shanthimahaganapathi.app</string>
+    <string name="custom_url_scheme">com.shanthimahaganapathi.app</string>
+    <string name="server_client_id">148252084027-5oacennrurg3sm36au42hv0iqpad7f3c.apps.googleusercontent.com</string>
+    <string name="google_auth_client_id">148252084027-5oacennrurg3sm36au42hv0iqpad7f3c.apps.googleusercontent.com</string>
 </resources>

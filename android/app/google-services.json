@@ -1,0 +1,34 @@
+{
+  "project_info": {
+    "project_number": "857377500075",
+    "project_id": "shanthimahaganapathi-2026",
+    "storage_bucket": "shanthimahaganapathi-2026.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:857377500075:android:b263973b824be3813940ee",
+        "android_client_info": {
+          "package_name": "com.shanthimahaganapathi.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "148252084027-5oacennrurg3sm36au42hv0iqpad7f3c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "GOOGLE_API_KEY_PLACEHOLDER"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

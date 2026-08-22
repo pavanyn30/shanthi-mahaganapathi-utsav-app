@@ -2,24 +2,40 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Users, CheckCircle2, Clock, XCircle, ShieldCheck, Mail, Phone, MapPin } from "lucide-react";
+import {
+  Users,
+  CheckCircle2,
+  Clock,
+  XCircle,
+  ShieldCheck,
+  Mail,
+  Phone,
+  MapPin,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
-import { useSession } from "@/hooks/use-session";
+import { useSession, stringToUuid } from "@/hooks/use-session";
 import { sendVolunteerReceivedEmail } from "@/lib/email-service";
 import { type VolunteerApplication } from "@/lib/festival";
 
 export const Route = createFileRoute("/volunteer")({
   head: () => ({
     meta: [
-      { title: "Volunteer Seva Registration — Ganapathi Festival 2026" },
-      { name: "description", content: "Sign up as a volunteer for aarti, prasada distribution, decorations, and crowd management." },
-      { property: "og:title", content: "Volunteer Seva Registration — Ganapathi Festival 2026" },
-      { property: "og:description", content: "Join the Ganapathi Festival volunteer team." },
+      { title: "Volunteer Seva Registration — SHANTHI MAHA GANAPATHI 2026" },
+      {
+        name: "description",
+        content:
+          "Sign up as a volunteer for aarti, prasada distribution, decorations, and crowd management.",
+      },
+      {
+        property: "og:title",
+        content: "Volunteer Seva Registration — SHANTHI MAHA GANAPATHI 2026",
+      },
+      { property: "og:description", content: "Join the SHANTHI MAHA GANAPATHI volunteer team." },
     ],
   }),
   component: VolunteerPage,
@@ -33,14 +49,22 @@ function VolunteerPage() {
 
   // Fetch existing application if user is logged in
   const { data: existingApp, isLoading: isCheckingApp } = useQuery({
-    queryKey: ["my-volunteer-app", user?.id],
-    enabled: !!user?.id,
+    queryKey: ["my-volunteer-app", user?.id, user?.email],
+    enabled: !!user,
     queryFn: async (): Promise<VolunteerApplication | null> => {
-      const { data, error } = await supabase
-        .from("volunteers")
-        .select("*")
-        .eq("user_id", user!.id)
-        .maybeSingle();
+      if (!user) return null;
+      const validUuid = stringToUuid(user.id);
+      let query = supabase.from("volunteers").select("*");
+      if (validUuid && user.email) {
+        query = query.or(`user_id.eq.${validUuid},email.ilike.${user.email}`);
+      } else if (validUuid) {
+        query = query.eq("user_id", validUuid);
+      } else if (user.email) {
+        query = query.eq("email", user.email);
+      } else {
+        return null;
+      }
+      const { data, error } = await query.maybeSingle();
       if (error && error.code !== "PGRST116") throw error;
       return (data as VolunteerApplication) ?? null;
     },
@@ -82,13 +106,48 @@ function VolunteerPage() {
       return toast.error("You have already submitted a volunteer application.");
     }
 
+    const validUserId = stringToUuid(user.id);
+    if (!validUserId) {
+      return toast.error("Invalid user identity. Please sign in again.");
+    }
+
     setLoading(true);
 
-    // Save details to database with status 'pending'
-    const { data, error } = await supabase
-      .from("volunteers")
-      .insert({
-        user_id: user.id,
+    // 1. Ensure user profile record exists first (satisfies foreign key constraint)
+    const { error: profileError } = await supabase.from("profiles").upsert(
+      {
+        id: validUserId,
+        full_name: name,
+        email: email || null,
+        phone: phone || null,
+      },
+      { onConflict: "id" },
+    );
+
+    if (profileError) {
+      console.warn("Profile upsert notice:", profileError.message);
+    }
+
+    let appData: VolunteerApplication | null = null;
+
+    // 2. Execute volunteer registration via atomic stored procedure or direct insert fallback
+    const { data: rpcRes, error: rpcErr } = await (supabase.rpc as any)("register_volunteer", {
+      _user_id: validUserId,
+      _full_name: name,
+      _phone: phone,
+      _email: email,
+      _gender: gender,
+      _address: address || null,
+      _duty: duty,
+      _skills: skills || null,
+      _availability: availability || null,
+    });
+
+    if (!rpcErr && rpcRes && typeof rpcRes === "object" && (rpcRes as any).success) {
+      const volId = (rpcRes as any).id;
+      appData = {
+        id: volId,
+        user_id: validUserId,
         full_name: name,
         phone,
         email,
@@ -98,23 +157,47 @@ function VolunteerPage() {
         skills: skills || null,
         availability: availability || null,
         status: "pending",
-      })
-      .select()
-      .single();
+        created_at: new Date().toISOString(),
+        approved_at: null,
+        approved_by: null,
+      };
+    } else if (rpcRes && typeof rpcRes === "object" && (rpcRes as any).error) {
+      setLoading(false);
+      return toast.error((rpcRes as any).error);
+    } else {
+      // Fallback direct insert
+      const { data: insertData, error: insertError } = await supabase
+        .from("volunteers")
+        .insert({
+          user_id: validUserId,
+          full_name: name,
+          phone,
+          email,
+          gender,
+          address: address || null,
+          duty,
+          skills: skills || null,
+          availability: availability || null,
+          status: "pending",
+        })
+        .select()
+        .single();
+
+      if (insertError) {
+        setLoading(false);
+        if (insertError.message.includes("duplicate") || insertError.code === "23505") {
+          return toast.error("You have already registered as a volunteer!");
+        }
+        return toast.error(insertError.message);
+      }
+      appData = insertData as unknown as VolunteerApplication;
+    }
 
     setLoading(false);
 
-    if (error) {
-      if (error.message.includes("duplicate") || error.code === "23505") {
-        toast.error("You have already registered as a volunteer!");
-      } else {
-        toast.error(error.message);
-      }
-      return;
+    if (appData) {
+      setSubmittedApp(appData);
     }
-
-    const appData = data as unknown as VolunteerApplication;
-    setSubmittedApp(appData);
     qc.invalidateQueries({ queryKey: ["my-volunteer-app"] });
     qc.invalidateQueries({ queryKey: ["volunteers"] });
 
@@ -135,7 +218,8 @@ function VolunteerPage() {
         </div>
         <h1 className="mt-4 font-display text-3xl font-extrabold">Join the Seva Team</h1>
         <p className="mt-2 text-sm text-muted-foreground max-w-lg mx-auto">
-          Serve during the festival for Aarti, Prasada distribution, decorations, cultural stages, and Visarjan procession.
+          Serve during the festival for Aarti, Prasada distribution, decorations, cultural stages,
+          and Visarjan procession.
         </p>
       </div>
 
@@ -144,7 +228,9 @@ function VolunteerPage() {
         <div className="card-premium mt-8 p-6 sm:p-8 space-y-6">
           <div className="flex items-center justify-between gap-4 border-b border-border/60 pb-4">
             <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Application Status</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                Application Status
+              </p>
               <h2 className="mt-1 font-display text-xl font-bold">{activeApp.full_name}</h2>
             </div>
             <StatusBadge status={activeApp.status} />
@@ -184,8 +270,13 @@ function VolunteerPage() {
               <p className="font-bold flex items-center gap-1.5 text-sm">
                 <Clock className="h-4 w-4" /> Application Under Review
               </p>
-              <p>Your volunteer application has been received and is waiting for Mandal admin verification.</p>
-              <p className="pt-1 text-[11px] opacity-90">A confirmation email has been dispatched to {activeApp.email || user?.email}.</p>
+              <p>
+                Your volunteer application has been received and is waiting for Mandal admin
+                verification.
+              </p>
+              <p className="pt-1 text-[11px] opacity-90">
+                A confirmation email has been dispatched to {activeApp.email || user?.email}.
+              </p>
             </div>
           )}
 
@@ -194,7 +285,9 @@ function VolunteerPage() {
               <p className="font-bold flex items-center gap-1.5 text-sm">
                 <ShieldCheck className="h-4 w-4" /> Active Volunteer Verified!
               </p>
-              <p>Congratulations! Your volunteer registration is approved. Thank you for your Seva.</p>
+              <p>
+                Congratulations! Your volunteer registration is approved. Thank you for your Seva.
+              </p>
             </div>
           )}
 
@@ -212,24 +305,52 @@ function VolunteerPage() {
         <form onSubmit={submit} className="card-premium mt-8 grid gap-4 p-6 sm:p-8">
           <div className="grid gap-2">
             <Label htmlFor="full_name">Full Name *</Label>
-            <Input id="full_name" name="full_name" required maxLength={100} className="rounded-2xl" placeholder="e.g. Ramesh Kumar" />
+            <Input
+              id="full_name"
+              name="full_name"
+              required
+              maxLength={100}
+              className="rounded-2xl"
+              placeholder="e.g. Ramesh Kumar"
+            />
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="grid gap-2">
               <Label htmlFor="phone">Phone Number *</Label>
-              <Input id="phone" name="phone" required maxLength={15} className="rounded-2xl" placeholder="+91 98765 43210" />
+              <Input
+                id="phone"
+                name="phone"
+                required
+                maxLength={15}
+                className="rounded-2xl"
+                placeholder="+91 98765 43210"
+              />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="email">Email Address *</Label>
-              <Input id="email" name="email" type="email" defaultValue={user?.email} required maxLength={255} className="rounded-2xl" placeholder="you@example.com" />
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                defaultValue={user?.email}
+                required
+                maxLength={255}
+                className="rounded-2xl"
+                placeholder="you@example.com"
+              />
             </div>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="grid gap-2">
               <Label htmlFor="gender">Gender *</Label>
-              <select id="gender" name="gender" defaultValue="Male" className="rounded-2xl border border-input bg-background p-2.5 text-sm">
+              <select
+                id="gender"
+                name="gender"
+                defaultValue="Male"
+                className="rounded-2xl border border-input bg-background p-2.5 text-sm"
+              >
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
                 <option value="Other">Other</option>
@@ -238,13 +359,23 @@ function VolunteerPage() {
             </div>
             <div className="grid gap-2">
               <Label htmlFor="address">Address / City</Label>
-              <Input id="address" name="address" maxLength={200} className="rounded-2xl" placeholder="e.g. Indiranagar, Bengaluru" />
+              <Input
+                id="address"
+                name="address"
+                maxLength={200}
+                className="rounded-2xl"
+                placeholder="e.g. Chitradurga"
+              />
             </div>
           </div>
 
           <div className="grid gap-2">
             <Label htmlFor="preferred_role">Preferred Seva Duty</Label>
-            <select id="preferred_role" name="preferred_role" className="rounded-2xl border border-input bg-background p-2.5 text-sm">
+            <select
+              id="preferred_role"
+              name="preferred_role"
+              className="rounded-2xl border border-input bg-background p-2.5 text-sm"
+            >
               <option value="Aarti & Puja Seva">Aarti & Puja Seva</option>
               <option value="Prasada Distribution">Prasada Distribution</option>
               <option value="Crowd Management & Security">Crowd Management & Security</option>
@@ -256,15 +387,31 @@ function VolunteerPage() {
 
           <div className="grid gap-2">
             <Label htmlFor="skills">Relevant Skills / Experience (Optional)</Label>
-            <Input id="skills" name="skills" maxLength={150} className="rounded-2xl" placeholder="e.g. First Aid, Sound Systems, Photography" />
+            <Input
+              id="skills"
+              name="skills"
+              maxLength={150}
+              className="rounded-2xl"
+              placeholder="e.g. First Aid, Sound Systems, Photography"
+            />
           </div>
 
           <div className="grid gap-2">
             <Label htmlFor="availability">Availability Timings</Label>
-            <Textarea id="availability" name="availability" rows={2} maxLength={200} className="rounded-2xl" placeholder="e.g. Evening 6 PM - 9 PM during all festival days" />
+            <Textarea
+              id="availability"
+              name="availability"
+              rows={2}
+              maxLength={200}
+              className="rounded-2xl"
+              placeholder="e.g. Evening 6 PM - 9 PM during all festival days"
+            />
           </div>
 
-          <Button disabled={loading} className="mt-2 rounded-full gradient-saffron text-primary-foreground shadow-warm">
+          <Button
+            disabled={loading}
+            className="mt-2 rounded-full gradient-saffron text-primary-foreground shadow-warm"
+          >
             {loading ? "Submitting Application..." : "Submit Volunteer Registration"}
           </Button>
 
@@ -293,7 +440,10 @@ function StatusBadge({ status }: { status: string }) {
     );
   }
   return (
-    <Badge variant="outline" className="rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30 gap-1 px-3 py-1">
+    <Badge
+      variant="outline"
+      className="rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30 gap-1 px-3 py-1"
+    >
       <Clock className="h-3.5 w-3.5" /> Pending Verification
     </Badge>
   );

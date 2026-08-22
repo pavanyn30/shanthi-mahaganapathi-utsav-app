@@ -1,9 +1,9 @@
-import { useEffect, useState, useRef } from 'react';
-import type { QueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
+import { useEffect, useState, useRef } from "react";
+import type { QueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
-export type SyncStatus = 'connecting' | 'connected' | 'reconnecting' | 'error';
+export type SyncStatus = "connecting" | "connected" | "reconnecting" | "error";
 
 /**
  * Realtime Synchronization Engine
@@ -12,12 +12,12 @@ export type SyncStatus = 'connecting' | 'connected' | 'reconnecting' | 'error';
  * without requiring any manual page refresh.
  */
 export function useRealtimeSync(queryClient: QueryClient) {
-  const [status, setStatus] = useState<SyncStatus>('connecting');
+  const [status, setStatus] = useState<SyncStatus>("connecting");
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const reconnectAttemptsRef = useRef<number>(0);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
     let isMounted = true;
 
@@ -27,72 +27,92 @@ export function useRealtimeSync(queryClient: QueryClient) {
 
       // Invalidate specific query keys
       switch (table) {
-        case 'events':
-          queryClient.invalidateQueries({ queryKey: ['events'] });
-          queryClient.invalidateQueries({ queryKey: ['event'] });
-          queryClient.invalidateQueries({ queryKey: ['event-counts'] });
+        case "festival_schedules":
+          queryClient.invalidateQueries({ queryKey: ["festival-schedules"] });
           break;
-        case 'volunteers':
-          queryClient.invalidateQueries({ queryKey: ['volunteers'] });
-          queryClient.invalidateQueries({ queryKey: ['my-volunteer-app'] });
-          queryClient.invalidateQueries({ queryKey: ['assigned-event'] });
-          queryClient.invalidateQueries({ queryKey: ['live-stats'] });
+        case "events":
+          queryClient.invalidateQueries({ queryKey: ["events"] });
+          queryClient.invalidateQueries({ queryKey: ["event"] });
+          queryClient.invalidateQueries({ queryKey: ["event-counts"] });
           break;
-        case 'donations':
-          queryClient.invalidateQueries({ queryKey: ['donations'] });
-          queryClient.invalidateQueries({ queryKey: ['all-donations'] });
-          queryClient.invalidateQueries({ queryKey: ['live-stats'] });
+        case "volunteers":
+          queryClient.invalidateQueries({ queryKey: ["volunteers"] });
+          queryClient.invalidateQueries({ queryKey: ["my-volunteer-app"] });
+          queryClient.invalidateQueries({ queryKey: ["assigned-event"] });
+          queryClient.invalidateQueries({ queryKey: ["live-stats"] });
           break;
-        case 'announcements':
-          queryClient.invalidateQueries({ queryKey: ['announcements'] });
+        case "donations":
+          queryClient.invalidateQueries({ queryKey: ["donations"] });
+          queryClient.invalidateQueries({ queryKey: ["all-donations"] });
+          queryClient.invalidateQueries({ queryKey: ["live-stats"] });
           break;
-        case 'sponsors':
-          queryClient.invalidateQueries({ queryKey: ['sponsors'] });
+        case "announcements":
+          queryClient.invalidateQueries({ queryKey: ["announcements"] });
           break;
-        case 'gallery_items':
-          queryClient.invalidateQueries({ queryKey: ['gallery'] });
+        case "sponsors":
+          queryClient.invalidateQueries({ queryKey: ["sponsors"] });
           break;
-        case 'registrations':
-          queryClient.invalidateQueries({ queryKey: ['all-registrations'] });
-          queryClient.invalidateQueries({ queryKey: ['my-registrations'] });
-          queryClient.invalidateQueries({ queryKey: ['event-counts'] });
-          queryClient.invalidateQueries({ queryKey: ['live-stats'] });
+        case "gallery_items":
+          queryClient.invalidateQueries({ queryKey: ["gallery"] });
           break;
-        case 'festival_settings':
-          queryClient.invalidateQueries({ queryKey: ['festival-settings'] });
+        case "registrations":
+          queryClient.invalidateQueries({ queryKey: ["all-registrations"] });
+          queryClient.invalidateQueries({ queryKey: ["my-registrations"] });
+          queryClient.invalidateQueries({ queryKey: ["event-counts"] });
+          queryClient.invalidateQueries({ queryKey: ["live-stats"] });
           break;
-        case 'festival_memories':
-          queryClient.invalidateQueries({ queryKey: ['festival-memories'] });
+        case "festival_settings":
+          queryClient.invalidateQueries({ queryKey: ["festival-settings"] });
+          break;
+        case "festival_memories":
+          queryClient.invalidateQueries({ queryKey: ["festival-memories"] });
+          break;
+        case "notifications":
+        case "user_notification_reads":
+        case "schedule_notification_logs":
+          queryClient.invalidateQueries({ queryKey: ["notifications"] });
+          queryClient.invalidateQueries({ queryKey: ["user-notifications"] });
+          queryClient.invalidateQueries({ queryKey: ["admin-schedule-notification-logs"] });
+          queryClient.invalidateQueries({ queryKey: ["admin-push-notifications"] });
+          break;
+        default:
+          // Global fallback for any table mutation
+          queryClient.invalidateQueries();
           break;
       }
     };
 
-    // Initialize Supabase Realtime Channel
+    // Initialize Supabase Realtime Channel (Postgres CDC + Realtime Broadcast)
     const channel = supabase
-      .channel('global-realtime-live-sync')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public' },
-        (payload) => {
-          if (!isMounted) return;
-          handleTableChange(payload.table, payload.eventType);
+      .channel("global-realtime-live-sync")
+      .on("postgres_changes", { event: "*", schema: "public" }, (payload) => {
+        if (!isMounted) return;
+        handleTableChange(payload.table, payload.eventType);
+      })
+      .on("broadcast", { event: "data_mutated" }, (payload) => {
+        if (!isMounted) return;
+        const tableName = payload.payload?.table;
+        if (tableName) {
+          handleTableChange(tableName, "BROADCAST");
+        } else {
+          queryClient.invalidateQueries();
         }
-      )
+      })
       .subscribe((subscribeStatus, err) => {
         if (!isMounted) return;
 
-        if (subscribeStatus === 'SUBSCRIBED') {
-          setStatus('connected');
+        if (subscribeStatus === "SUBSCRIBED") {
+          setStatus("connected");
           reconnectAttemptsRef.current = 0;
           if (reconnectTimeoutRef.current) {
             clearTimeout(reconnectTimeoutRef.current);
             reconnectTimeoutRef.current = null;
           }
-        } else if (subscribeStatus === 'CLOSED' || subscribeStatus === 'CHANNEL_ERROR') {
-          setStatus('reconnecting');
+        } else if (subscribeStatus === "CLOSED" || subscribeStatus === "CHANNEL_ERROR") {
+          setStatus("reconnecting");
           scheduleReconnect();
         } else if (err) {
-          setStatus('error');
+          setStatus("error");
         }
       });
 
@@ -118,24 +138,24 @@ export function useRealtimeSync(queryClient: QueryClient) {
     // Network Online / Offline handlers
     const handleOnline = () => {
       if (!isMounted) return;
-      toast.info('Network restored. Syncing realtime database...');
-      setStatus('connecting');
+      toast.info("Network restored. Syncing realtime database...");
+      setStatus("connecting");
       queryClient.invalidateQueries();
     };
 
     const handleOffline = () => {
       if (!isMounted) return;
-      setStatus('error');
-      toast.warning('Network connection lost. Offline fallback active.');
+      setStatus("error");
+      toast.warning("Network connection lost. Offline fallback active.");
     };
 
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
     return () => {
       isMounted = false;
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
 
       if (reconnectTimeoutRef.current) {
         clearTimeout(reconnectTimeoutRef.current);
@@ -146,4 +166,19 @@ export function useRealtimeSync(queryClient: QueryClient) {
   }, [queryClient]);
 
   return { status };
+}
+
+/**
+ * Triggers instant real-time sync across all connected clients via WebSocket broadcast.
+ */
+export function broadcastDataMutation(table: string) {
+  try {
+    supabase.channel("global-realtime-live-sync").send({
+      type: "broadcast",
+      event: "data_mutated",
+      payload: { table, timestamp: Date.now() },
+    });
+  } catch (err) {
+    console.warn("Broadcast mutation warning:", err);
+  }
 }

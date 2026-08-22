@@ -12,18 +12,25 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ChildSafetyRouteImport } from './routes/child-safety'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DonateRouteImport } from './routes/donate'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as LiveRouteImport } from './routes/live'
 import { Route as MemoriesRouteImport } from './routes/memories'
+import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as SponsorsRouteImport } from './routes/sponsors'
 import { Route as VolunteerRouteImport } from './routes/volunteer'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedMyPassesRouteImport } from './routes/_authenticated/my-passes'
 import { Route as AuthenticatedVolunteerDashboardRouteImport } from './routes/_authenticated/volunteer-dashboard'
+import { Route as EventIdRouteImport } from './routes/event.$id'
 import { Route as EventsIndexRouteImport } from './routes/events.index'
 import { Route as EventsSlugRouteImport } from './routes/events.$slug'
+import { Route as NotificationIdRouteImport } from './routes/notification.$id'
+import { Route as ProfileIdRouteImport } from './routes/profile.$id'
+import { Route as ScheduleIdRouteImport } from './routes/schedule.$id'
+import { Route as VideoIdRouteImport } from './routes/video.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -37,6 +44,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChildSafetyRoute = ChildSafetyRouteImport.update({
+  id: '/child-safety',
+  path: '/child-safety',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -62,6 +74,11 @@ const LiveRoute = LiveRouteImport.update({
 const MemoriesRoute = MemoriesRouteImport.update({
   id: '/memories',
   path: '/memories',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SponsorsRoute = SponsorsRouteImport.update({
@@ -90,6 +107,11 @@ const AuthenticatedVolunteerDashboardRoute =
     path: '/volunteer-dashboard',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const EventIdRoute = EventIdRouteImport.update({
+  id: '/event/$id',
+  path: '/event/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EventsIndexRoute = EventsIndexRouteImport.update({
   id: '/events/',
   path: '/events/',
@@ -100,37 +122,71 @@ const EventsSlugRoute = EventsSlugRouteImport.update({
   path: '/events/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NotificationIdRoute = NotificationIdRouteImport.update({
+  id: '/notification/$id',
+  path: '/notification/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileIdRoute = ProfileIdRouteImport.update({
+  id: '/profile/$id',
+  path: '/profile/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScheduleIdRoute = ScheduleIdRouteImport.update({
+  id: '/schedule/$id',
+  path: '/schedule/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VideoIdRoute = VideoIdRouteImport.update({
+  id: '/video/$id',
+  path: '/video/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/child-safety': typeof ChildSafetyRoute
   '/contact': typeof ContactRoute
   '/donate': typeof DonateRoute
   '/gallery': typeof GalleryRoute
   '/live': typeof LiveRoute
   '/memories': typeof MemoriesRoute
+  '/notifications': typeof NotificationsRoute
   '/sponsors': typeof SponsorsRoute
   '/volunteer': typeof VolunteerRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/my-passes': typeof AuthenticatedMyPassesRoute
   '/volunteer-dashboard': typeof AuthenticatedVolunteerDashboardRoute
+  '/event/$id': typeof EventIdRoute
   '/events/$slug': typeof EventsSlugRoute
+  '/notification/$id': typeof NotificationIdRoute
+  '/profile/$id': typeof ProfileIdRoute
+  '/schedule/$id': typeof ScheduleIdRoute
+  '/video/$id': typeof VideoIdRoute
   '/events/': typeof EventsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/child-safety': typeof ChildSafetyRoute
   '/contact': typeof ContactRoute
   '/donate': typeof DonateRoute
   '/gallery': typeof GalleryRoute
   '/live': typeof LiveRoute
   '/memories': typeof MemoriesRoute
+  '/notifications': typeof NotificationsRoute
   '/sponsors': typeof SponsorsRoute
   '/volunteer': typeof VolunteerRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/my-passes': typeof AuthenticatedMyPassesRoute
   '/volunteer-dashboard': typeof AuthenticatedVolunteerDashboardRoute
+  '/event/$id': typeof EventIdRoute
   '/events/$slug': typeof EventsSlugRoute
+  '/notification/$id': typeof NotificationIdRoute
+  '/profile/$id': typeof ProfileIdRoute
+  '/schedule/$id': typeof ScheduleIdRoute
+  '/video/$id': typeof VideoIdRoute
   '/events': typeof EventsIndexRoute
 }
 export interface FileRoutesById {
@@ -138,17 +194,24 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/child-safety': typeof ChildSafetyRoute
   '/contact': typeof ContactRoute
   '/donate': typeof DonateRoute
   '/gallery': typeof GalleryRoute
   '/live': typeof LiveRoute
   '/memories': typeof MemoriesRoute
+  '/notifications': typeof NotificationsRoute
   '/sponsors': typeof SponsorsRoute
   '/volunteer': typeof VolunteerRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/my-passes': typeof AuthenticatedMyPassesRoute
   '/_authenticated/volunteer-dashboard': typeof AuthenticatedVolunteerDashboardRoute
+  '/event/$id': typeof EventIdRoute
   '/events/$slug': typeof EventsSlugRoute
+  '/notification/$id': typeof NotificationIdRoute
+  '/profile/$id': typeof ProfileIdRoute
+  '/schedule/$id': typeof ScheduleIdRoute
+  '/video/$id': typeof VideoIdRoute
   '/events/': typeof EventsIndexRoute
 }
 export interface FileRouteTypes {
@@ -156,50 +219,71 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/child-safety'
     | '/contact'
     | '/donate'
     | '/gallery'
     | '/live'
     | '/memories'
+    | '/notifications'
     | '/sponsors'
     | '/volunteer'
     | '/admin'
     | '/my-passes'
     | '/volunteer-dashboard'
+    | '/event/$id'
     | '/events/$slug'
+    | '/notification/$id'
+    | '/profile/$id'
+    | '/schedule/$id'
+    | '/video/$id'
     | '/events/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
+    | '/child-safety'
     | '/contact'
     | '/donate'
     | '/gallery'
     | '/live'
     | '/memories'
+    | '/notifications'
     | '/sponsors'
     | '/volunteer'
     | '/admin'
     | '/my-passes'
     | '/volunteer-dashboard'
+    | '/event/$id'
     | '/events/$slug'
+    | '/notification/$id'
+    | '/profile/$id'
+    | '/schedule/$id'
+    | '/video/$id'
     | '/events'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/child-safety'
     | '/contact'
     | '/donate'
     | '/gallery'
     | '/live'
     | '/memories'
+    | '/notifications'
     | '/sponsors'
     | '/volunteer'
     | '/_authenticated/admin'
     | '/_authenticated/my-passes'
     | '/_authenticated/volunteer-dashboard'
+    | '/event/$id'
     | '/events/$slug'
+    | '/notification/$id'
+    | '/profile/$id'
+    | '/schedule/$id'
+    | '/video/$id'
     | '/events/'
   fileRoutesById: FileRoutesById
 }
@@ -207,14 +291,21 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  ChildSafetyRoute: typeof ChildSafetyRoute
   ContactRoute: typeof ContactRoute
   DonateRoute: typeof DonateRoute
   GalleryRoute: typeof GalleryRoute
   LiveRoute: typeof LiveRoute
   MemoriesRoute: typeof MemoriesRoute
+  NotificationsRoute: typeof NotificationsRoute
   SponsorsRoute: typeof SponsorsRoute
   VolunteerRoute: typeof VolunteerRoute
+  EventIdRoute: typeof EventIdRoute
   EventsSlugRoute: typeof EventsSlugRoute
+  NotificationIdRoute: typeof NotificationIdRoute
+  ProfileIdRoute: typeof ProfileIdRoute
+  ScheduleIdRoute: typeof ScheduleIdRoute
+  VideoIdRoute: typeof VideoIdRoute
   EventsIndexRoute: typeof EventsIndexRoute
 }
 
@@ -239,6 +330,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/child-safety': {
+      id: '/child-safety'
+      path: '/child-safety'
+      fullPath: '/child-safety'
+      preLoaderRoute: typeof ChildSafetyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -276,6 +374,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MemoriesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sponsors': {
       id: '/sponsors'
       path: '/sponsors'
@@ -311,6 +416,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedVolunteerDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/event/$id': {
+      id: '/event/$id'
+      path: '/event/$id'
+      fullPath: '/event/$id'
+      preLoaderRoute: typeof EventIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/events/': {
       id: '/events/'
       path: '/events'
@@ -323,6 +435,34 @@ declare module '@tanstack/react-router' {
       path: '/events/$slug'
       fullPath: '/events/$slug'
       preLoaderRoute: typeof EventsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notification/$id': {
+      id: '/notification/$id'
+      path: '/notification/$id'
+      fullPath: '/notification/$id'
+      preLoaderRoute: typeof NotificationIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile/$id': {
+      id: '/profile/$id'
+      path: '/profile/$id'
+      fullPath: '/profile/$id'
+      preLoaderRoute: typeof ProfileIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/schedule/$id': {
+      id: '/schedule/$id'
+      path: '/schedule/$id'
+      fullPath: '/schedule/$id'
+      preLoaderRoute: typeof ScheduleIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/video/$id': {
+      id: '/video/$id'
+      path: '/video/$id'
+      fullPath: '/video/$id'
+      preLoaderRoute: typeof VideoIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -347,26 +487,23 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  ChildSafetyRoute: ChildSafetyRoute,
   ContactRoute: ContactRoute,
   DonateRoute: DonateRoute,
   GalleryRoute: GalleryRoute,
   LiveRoute: LiveRoute,
   MemoriesRoute: MemoriesRoute,
+  NotificationsRoute: NotificationsRoute,
   SponsorsRoute: SponsorsRoute,
   VolunteerRoute: VolunteerRoute,
+  EventIdRoute: EventIdRoute,
   EventsSlugRoute: EventsSlugRoute,
+  NotificationIdRoute: NotificationIdRoute,
+  ProfileIdRoute: ProfileIdRoute,
+  ScheduleIdRoute: ScheduleIdRoute,
+  VideoIdRoute: VideoIdRoute,
   EventsIndexRoute: EventsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

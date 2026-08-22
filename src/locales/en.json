@@ -1,0 +1,130 @@
+{
+  "nav": {
+    "home": "Home",
+    "events": "Events",
+    "memories": "Memories",
+    "live": "Live",
+    "gallery": "Gallery",
+    "donate": "Donate",
+    "sponsors": "Sponsors",
+    "volunteer": "Volunteer",
+    "contact": "Contact",
+    "signIn": "Sign in",
+    "myPasses": "My Passes",
+    "sevaDashboard": "Seva Dashboard",
+    "adminPanel": "Admin Panel"
+  },
+  "hero": {
+    "title": "Ganapathi Festival 2026",
+    "subtitle": "days of aarti, culture, sport and seva. Register for competitions, collect your QR pass, and celebrate with the whole neighbourhood.",
+    "registerEvents": "Watch memories",
+    "watchLive": "Watch live darshan",
+    "beginsIn": "FESTIVAL BEGINS IN",
+    "days": "DAYS",
+    "hours": "HOURS",
+    "mins": "MINS",
+    "secs": "SECS"
+  },
+  "quick": {
+    "browseEvents": "Browse Events",
+    "myPasses": "My QR Passes",
+    "donate": "Donate",
+    "volunteer": "Volunteer",
+    "liveDarshan": "Live Darshan",
+    "gallery": "Gallery"
+  },
+  "common": {
+    "loading": "Loading...",
+    "submit": "Submit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "filter": "Filter",
+    "all": "All",
+    "viewAll": "View All",
+    "close": "Close",
+    "share": "Share",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "error": "An error occurred",
+    "success": "Success",
+    "retry": "Retry",
+    "photo": "Photo",
+    "video": "Video",
+    "category": "Category",
+    "details": "Details",
+    "status": "Status",
+    "date": "Date",
+    "time": "Time",
+    "location": "Location",
+    "phone": "Phone",
+    "email": "Email",
+    "name": "Name",
+    "amount": "Amount"
+  },
+  "events": {
+    "title": "Festival Events & Competitions",
+    "subtitle": "Join devotional aartis, cultural contests, sports matches, and community feasts.",
+    "searchPlaceholder": "Search events by name, venue or category...",
+    "registerNow": "Register Now",
+    "getPass": "Get Free Pass",
+    "entryFee": "Entry Fee",
+    "free": "FREE",
+    "registered": "Registered",
+    "viewDetails": "View Details"
+  },
+  "gallery": {
+    "title": "Festival Media Gallery 🪔",
+    "subtitle": "Relive divine moments from Maha Aarti, traditional Dhol Tasha troupes, stage competitions, and grand Visarjan celebrations!",
+    "allMedia": "All Media",
+    "photos": "Photos 📷",
+    "videos": "Videos 🎥",
+    "noMedia": "No media items uploaded yet. Photos & videos will be uploaded by festival admins during the celebrations."
+  },
+  "donate": {
+    "title": "Support Ganapathi Festival 🪔",
+    "subtitle": "Your generous contribution powers daily Annadhanam, pandal decorations, cultural competitions, and grand Visarjan.",
+    "selectAmount": "Select Donation Amount",
+    "customAmount": "Custom Amount (₹)",
+    "donorName": "Donor Name",
+    "donorPhone": "Phone Number",
+    "gothra": "Gothram / Nakshatram (Optional)",
+    "payRazorpay": "Donate via Razorpay",
+    "taxBenefit": "80G Tax Benefit Available",
+    "recentDonations": "Recent Devotional Contributions"
+  },
+  "auth": {
+    "signInTitle": "Sign In to Your Account",
+    "subtitle": "Access your festival event passes, volunteer portal, and donation history.",
+    "emailLabel": "Email Address",
+    "passwordLabel": "Password",
+    "sendOtp": "Send Login Link / OTP",
+    "signedIn": "Successfully signed in!"
+  },
+  "passes": {
+    "title": "My Festival Passes & Tickets 🎫",
+    "subtitle": "Show your unique QR code at the venue gate for instant check-in.",
+    "noPasses": "You have no registered event passes yet.",
+    "downloadPass": "Download QR Pass"
+  },
+  "admin": {
+    "title": "Festival Admin Command Center 🛡️",
+    "subtitle": "Manage events, announcements, donations, gallery media, live streams, and volunteers.",
+    "eventsTab": "Events & Competitions",
+    "announcementsTab": "Announcements Ticker",
+    "galleryTab": "Media Gallery",
+    "donationsTab": "Donations & Seva",
+    "liveStreamTab": "Live Stream Settings",
+    "addEvent": "Add New Event",
+    "addAnnouncement": "Publish Announcement",
+    "addGallery": "Upload Media to Gallery"
+  },
+  "volunteer": {
+    "title": "Seva & Volunteer Dashboard 🚩",
+    "subtitle": "Scan attendee QR passes, record entry checks, and manage queue flow.",
+    "scanQr": "Scan QR Pass",
+    "recentScans": "Recent Check-in Activity"
+  }
+}

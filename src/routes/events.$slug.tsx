@@ -11,18 +11,26 @@ import {
   Trophy,
   ScrollText,
   Phone,
-  ArrowLeft,
+  ChevronLeft,
+  CheckCircle2,
+  Calendar,
+  Share2,
+  Ticket,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { supabase } from "@/integrations/supabase/client";
-import { useSession } from "@/hooks/use-session";
 import {
-  CATEGORY_LABELS,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { supabase } from "@/integrations/supabase/client";
+import { useSession, stringToUuid } from "@/hooks/use-session";
+import {
   eventBySlugQuery,
   eventCountsQuery,
   formatCurrency,
@@ -30,7 +38,9 @@ import {
   formatTime,
   myRegistrationsQuery,
   type EventRow,
+  type Registration,
 } from "@/lib/festival";
+import heroGanapathi from "@/assets/ganapathi-hero.jpg";
 
 export const Route = createFileRoute("/events/$slug")({
   head: ({ params }) => {
@@ -38,9 +48,15 @@ export const Route = createFileRoute("/events/$slug")({
     return {
       meta: [
         { title: `${name} — Ganapathi Festival 2026` },
-        { name: "description", content: `Rules, prizes, timing and online registration for ${name} at Ganapathi Festival 2026.` },
+        {
+          name: "description",
+          content: `Rules, prizes, timing and online registration for ${name} at Ganapathi Festival 2026.`,
+        },
         { property: "og:title", content: `${name} — Ganapathi Festival 2026` },
-        { property: "og:description", content: `Register online for ${name} and get your QR event pass.` },
+        {
+          property: "og:description",
+          content: `Register online for ${name} and get your QR event pass.`,
+        },
       ],
     };
   },
@@ -49,19 +65,27 @@ export const Route = createFileRoute("/events/$slug")({
 
 function EventDetail() {
   const { slug } = Route.useParams();
+  const navigate = useNavigate();
   const { data: event, isLoading } = useQuery(eventBySlugQuery(slug));
   const { data: counts = {} } = useQuery(eventCountsQuery);
   const { user } = useSession();
   const { data: myRegs = [] } = useQuery(myRegistrationsQuery(user?.id));
 
   if (isLoading) {
-    return <div className="mx-auto max-w-4xl px-4 py-20"><div className="h-96 animate-pulse rounded-3xl bg-muted" /></div>;
+    return (
+      <div className="mx-auto max-w-lg px-4 py-20">
+        <div className="h-96 animate-pulse rounded-3xl bg-slate-900 border border-slate-800" />
+      </div>
+    );
   }
   if (!event) {
     return (
-      <div className="mx-auto max-w-2xl px-4 py-24 text-center">
-        <h1 className="font-display text-2xl font-bold">Event not found</h1>
-        <Button asChild className="mt-6 rounded-full"><Link to="/events">Back to events</Link></Button>
+      <div className="mx-auto max-w-lg px-4 py-24 text-center">
+        <h1 className="font-display text-2xl font-bold text-white">Event not found.</h1>
+        <p className="mt-2 text-xs text-slate-400">The requested event could not be found.</p>
+        <Button asChild className="mt-6 rounded-full gradient-saffron text-slate-950 font-bold">
+          <Link to="/events">Back to Events</Link>
+        </Button>
       </div>
     );
   }
@@ -70,132 +94,227 @@ function EventDetail() {
   const full = count >= event.max_participants;
   const already = myRegs.find((r) => r.event_id === event.id);
 
+  // Generate Google Calendar Link
+  const handleAddToCalendar = () => {
+    try {
+      const eventDate = new Date(event.event_date);
+      const startTime = event.start_time || "19:00:00";
+      const [hours, minutes] = startTime.split(":").map(Number);
+      
+      const startDateTime = new Date(eventDate);
+      startDateTime.setHours(hours || 19, minutes || 0, 0);
+
+      const endDateTime = new Date(startDateTime.getTime() + 2 * 3600 * 1000); // 2 hours duration
+
+      const formatCalDate = (d: Date) =>
+        d.toISOString().replace(/-|:|\.\d+/g, "");
+
+      const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
+        event.name,
+      )}&dates=${formatCalDate(startDateTime)}/${formatCalDate(
+        endDateTime,
+      )}&details=${encodeURIComponent(
+        event.description || "Shanthi Maha Ganapathi Utsav Event",
+      )}&location=${encodeURIComponent(event.venue || "Sri Ganapathi Mandal, Chitradurga")}`;
+
+      window.open(gcalUrl, "_blank");
+      toast.success("📅 Calendar event created!");
+    } catch {
+      toast.error("Could not generate calendar link.");
+    }
+  };
+
+  // Highlights list
+  const highlights = event.rules
+    ? event.rules.split("\n").filter((r) => r.trim().length > 0).slice(0, 4)
+    : ["Maha Aarti", "Bhajans", "Prasadam Distribution", "Fireworks"];
+
   return (
-    <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
-      <Link to="/events" className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-primary">
-        <ArrowLeft className="h-4 w-4" /> All events
-      </Link>
+    <div className="min-h-screen bg-slate-950 text-slate-100 pb-24">
+      <div className="mx-auto max-w-lg px-4 py-4 sm:py-6">
+        {/* Navigation Top Bar */}
+        <div className="flex items-center justify-between mb-5">
+          <button
+            onClick={() => navigate({ to: "/events" })}
+            className="w-9 h-9 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
+            aria-label="Go Back"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
 
-      <header className="mt-6 card-premium overflow-hidden">
-        <div className="gradient-temple px-6 py-8 text-temple-foreground sm:px-8 sm:py-10">
-          <Badge className="rounded-full bg-white/20 text-temple-foreground">
-            {CATEGORY_LABELS[event.category] ?? event.category}
-          </Badge>
-          <h1 className="mt-3 font-display text-3xl font-extrabold sm:text-4xl">{event.name}</h1>
-          <p className="mt-3 max-w-2xl text-sm opacity-95 sm:text-base">{event.description}</p>
+          <h1 className="font-display text-xl font-bold text-amber-300 tracking-wide text-center flex-1">
+            Event Details
+          </h1>
+
+          <div className="w-9" />
         </div>
 
-        <div className="grid gap-4 p-6 sm:grid-cols-2 lg:grid-cols-4 sm:p-8">
-          <Fact icon={CalendarDays} label="Date" value={formatEventDate(event.event_date)} />
-          <Fact icon={Clock} label="Time" value={formatTime(event.start_time)} />
-          <Fact icon={MapPin} label="Venue" value={event.venue} />
-          <Fact
-            icon={IndianRupee}
-            label="Entry fee"
-            value={event.entry_fee > 0 ? formatCurrency(event.entry_fee) : "Free"}
-          />
-          <Fact icon={Users} label="Slots" value={`${count} / ${event.max_participants}`} />
-          <Fact icon={Users} label="Team size" value={event.team_size > 1 ? `${event.team_size} players` : "Solo"} />
-          <Fact
-            icon={Users}
-            label="Age limit"
-            value={event.age_min || event.age_max ? `${event.age_min ?? 0} – ${event.age_max ?? 99} yrs` : "Open"}
-          />
-          <Fact icon={Phone} label="Organizer" value={`${event.organizer_name ?? "Mandal"} · ${event.organizer_phone ?? ""}`} />
-        </div>
-      </header>
+        {/* MAIN EVENT CARD (Matches Mockup Design) */}
+        <div className="rounded-3xl bg-[#FDFBF7] dark:bg-stone-900/90 border border-amber-500/30 shadow-2xl overflow-hidden text-slate-900 dark:text-slate-100">
+          {/* Top Event Poster Image */}
+          <div className="relative h-52 sm:h-60 w-full overflow-hidden bg-slate-950">
+            <img
+              src={event.poster_url || heroGanapathi}
+              alt={event.name}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent" />
+          </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-        <div className="grid gap-6">
-          <InfoCard icon={ScrollText} title="Rules" body={event.rules || "Standard festival rules apply."} />
-          <InfoCard icon={Trophy} title="Prizes" body={event.prize_details || "Certificates for all participants."} />
-        </div>
+          {/* Card Content */}
+          <div className="p-5 sm:p-6 space-y-4">
+            {/* Title */}
+            <div>
+              <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-amber-200">
+                {event.name}
+              </h2>
 
-        <aside className="card-premium h-fit p-6">
-          {already ? (
-            <>
-              <p className="font-display text-lg font-bold text-primary">You're registered!</p>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Pass ID <span className="font-mono font-semibold text-foreground">{already.pass_code}</span>
-              </p>
-              <Button asChild className="mt-5 w-full rounded-full">
-                <Link to="/my-passes">View QR pass</Link>
-              </Button>
-            </>
-          ) : !event.registration_open ? (
-            <p className="text-sm font-semibold text-destructive">Registrations are closed for this event.</p>
-          ) : full ? (
-            <p className="text-sm font-semibold text-destructive">All slots are full.</p>
-          ) : user ? (
-            <RegisterDialog event={event} userId={user.id} email={user.email ?? ""} />
-          ) : (
-            <>
-              <p className="text-sm text-muted-foreground">Sign in to register and receive your QR event pass.</p>
-              <Button asChild className="mt-5 w-full rounded-full gradient-saffron text-primary-foreground">
-                <Link to="/auth">Sign in to register</Link>
-              </Button>
-            </>
-          )}
-        </aside>
+              {/* Date & Time Badge */}
+              <div className="mt-2 flex items-center gap-2 text-xs sm:text-sm font-bold text-amber-700 dark:text-amber-400">
+                <CalendarDays className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                <span>
+                  {formatEventDate(event.event_date)}, {formatTime(event.start_time)}
+                </span>
+              </div>
+            </div>
+
+            {/* Description */}
+            <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+              {event.description || "Join us for divine celebrations and seek blessings of Lord Ganapathi."}
+            </p>
+
+            {/* Event Highlights Section */}
+            <div className="pt-2 border-t border-slate-200 dark:border-stone-800">
+              <h3 className="font-display text-sm font-bold text-slate-900 dark:text-amber-300 mb-3">
+                Event Highlights
+              </h3>
+              <div className="space-y-2">
+                {highlights.map((item, idx) => (
+                  <div key={idx} className="flex items-center gap-2.5 text-xs sm:text-sm font-medium text-slate-800 dark:text-slate-200">
+                    <CheckCircle2 className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Key Facts Pills Grid */}
+            <div className="grid grid-cols-2 gap-2 pt-2 text-xs">
+              <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-stone-800/80 border border-slate-200 dark:border-stone-700/50">
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold block">Venue</span>
+                <span className="font-bold truncate block">{event.venue}</span>
+              </div>
+              <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-stone-800/80 border border-slate-200 dark:border-stone-700/50">
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold block">Entry Fee</span>
+                <span className="font-bold truncate block">
+                  {event.entry_fee > 0 ? formatCurrency(event.entry_fee) : "Free Entry"}
+                </span>
+              </div>
+            </div>
+
+            {/* Main Action Buttons: Add to Calendar & Register */}
+            <div className="pt-3 space-y-2.5">
+              <button
+                onClick={handleAddToCalendar}
+                className="w-full py-3.5 rounded-full gradient-saffron text-slate-950 font-bold text-xs sm:text-sm shadow-lg hover:opacity-95 active:scale-[0.99] transition-all flex items-center justify-center gap-2"
+              >
+                <Calendar className="w-4 h-4 fill-slate-950" />
+                <span>Add to Calendar</span>
+              </button>
+
+              {already ? (
+                <Button asChild variant="outline" className="w-full rounded-full border-amber-500/40 text-amber-400 font-bold text-xs">
+                  <Link to="/my-passes">
+                    <Ticket className="w-4 h-4 mr-1.5" /> View QR Pass (Pass: {already.pass_code})
+                  </Link>
+                </Button>
+              ) : !event.registration_open ? (
+                <p className="text-center text-xs font-semibold text-red-400">
+                  Registrations are currently closed.
+                </p>
+              ) : full ? (
+                <p className="text-center text-xs font-semibold text-red-400">All slots are full.</p>
+              ) : user ? (
+                <RegisterDialog event={event} userId={stringToUuid(user.id)} email={user.email ?? ""} />
+              ) : (
+                <Button
+                  asChild
+                  variant="outline"
+                  className="w-full rounded-full border-slate-700 text-slate-300 font-bold text-xs"
+                >
+                  <Link to="/auth">Sign in to Register Online</Link>
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
-function Fact({ icon: Icon, label, value }: { icon: typeof Clock; label: string; value: string }) {
-  return (
-    <div className="flex min-w-0 items-start gap-3 rounded-2xl bg-secondary p-4">
-      <Icon className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-      <div className="min-w-0">
-        <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{label}</p>
-        <p className="truncate text-sm font-semibold">{value}</p>
-      </div>
-    </div>
-  );
-}
+import { RegistrationSuccessModal } from "@/components/features/registrations/RegistrationSuccessModal";
+import { notifyEventPassConfirmed } from "@/lib/services/onesignal-service";
 
-function InfoCard({ icon: Icon, title, body }: { icon: typeof Trophy; title: string; body: string }) {
-  return (
-    <section className="card-premium p-6">
-      <h2 className="flex items-center gap-2 font-display text-lg font-bold">
-        <Icon className="h-5 w-5 text-primary" /> {title}
-      </h2>
-      <p className="mt-3 whitespace-pre-line text-sm text-foreground/85">{body}</p>
-    </section>
-  );
-}
-
-function RegisterDialog({ event, userId, email }: { event: EventRow; userId: string; email: string }) {
+function RegisterDialog({
+  event,
+  userId,
+  email,
+}: {
+  event: EventRow;
+  userId: string;
+  email: string;
+}) {
   const [open, setOpen] = useState(false);
+  const [successModalOpen, setSuccessModalOpen] = useState(false);
+  const [confirmedReg, setConfirmedReg] = useState<Registration | null>(null);
   const qc = useQueryClient();
-  const navigate = useNavigate();
 
   const mutation = useMutation({
     mutationFn: async (form: Record<string, string>) => {
-      const { error } = await supabase.from("registrations").insert({
-        event_id: event.id,
-        user_id: userId,
-        full_name: form.full_name,
-        phone: form.phone,
-        email: form.email || null,
-        age: form.age ? Number(form.age) : null,
-        gender: form.gender || null,
-        address: form.address || null,
-        team_name: form.team_name || null,
-        teammates: form.teammates || null,
-        emergency_contact: form.emergency_contact || null,
-        payment_status: event.entry_fee > 0 ? "pending" : "not_required",
-      });
+      const generatedPassCode = `EVT-${Math.floor(100000 + Math.random() * 900000)}`;
+
+      const { data, error } = await supabase
+        .from("registrations")
+        .insert({
+          event_id: event.id,
+          user_id: userId,
+          pass_code: generatedPassCode,
+          full_name: form.full_name,
+          phone: form.phone,
+          email: form.email || null,
+          age: form.age ? Number(form.age) : null,
+          gender: form.gender || null,
+          address: form.address || null,
+          team_name: form.team_name || null,
+          teammates: form.teammates || null,
+          emergency_contact: form.emergency_contact || null,
+          status: "confirmed",
+          payment_status: event.entry_fee > 0 ? "pending" : "not_required",
+        })
+        .select("*, events(name, event_date, start_time, venue, slug)")
+        .single();
+
       if (error) throw new Error(error.message);
+      return data as unknown as Registration;
     },
-    onSuccess: () => {
+    onSuccess: (newReg) => {
       qc.invalidateQueries();
       setOpen(false);
-      toast.success("Registered! Your QR pass is ready.");
-      navigate({ to: "/my-passes" });
+      setConfirmedReg(newReg);
+      setSuccessModalOpen(true);
+      toast.success("Registration Confirmed! Your QR pass is generated.");
+
+      notifyEventPassConfirmed({
+        userId,
+        eventName: event.name,
+        passCode: newReg.pass_code,
+      });
     },
     onError: (e: Error) =>
-      toast.error(e.message.includes("duplicate") ? "You have already registered for this event." : e.message),
+      toast.error(
+        e.message.includes("duplicate") ? "You have already registered for this event." : e.message,
+      ),
   });
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -216,23 +335,18 @@ function RegisterDialog({ event, userId, email }: { event: EventRow; userId: str
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <div>
-        <p className="text-sm text-muted-foreground">
-          {event.entry_fee > 0
-            ? `Entry fee ${formatCurrency(event.entry_fee)}, payable at the registration desk or via UPI.`
-            : "Free entry. Registration closes when slots fill up."}
-        </p>
         <DialogTrigger asChild>
-          <Button className="mt-5 w-full rounded-full gradient-saffron text-primary-foreground shadow-warm">
-            Register now
+          <Button variant="outline" className="w-full rounded-full border-amber-500/40 text-amber-400 font-bold text-xs">
+            Register Online for Pass
           </Button>
         </DialogTrigger>
       </div>
 
-      <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
+      <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg rounded-3xl bg-slate-950 border border-amber-500/40 text-slate-100">
         <DialogHeader>
-          <DialogTitle className="font-display">Register for {event.name}</DialogTitle>
+          <DialogTitle className="font-display text-amber-300">Register for {event.name}</DialogTitle>
         </DialogHeader>
-        <form onSubmit={onSubmit} className="grid gap-4">
+        <form onSubmit={onSubmit} className="grid gap-4 mt-2">
           <Field name="full_name" label="Full name" required maxLength={100} />
           <div className="grid gap-4 sm:grid-cols-2">
             <Field name="phone" label="Phone" required maxLength={15} />
@@ -242,7 +356,12 @@ function RegisterDialog({ event, userId, email }: { event: EventRow; userId: str
             <Field name="age" label="Age" type="number" />
             <div className="grid gap-2">
               <Label htmlFor="gender">Gender</Label>
-              <select id="gender" name="gender" defaultValue="Male" className="rounded-2xl border border-input bg-background p-2.5 text-sm">
+              <select
+                id="gender"
+                name="gender"
+                defaultValue="Male"
+                className="rounded-2xl border border-slate-700 bg-slate-900 p-2.5 text-sm text-slate-100"
+              >
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
                 <option value="Other">Other</option>
@@ -252,7 +371,13 @@ function RegisterDialog({ event, userId, email }: { event: EventRow; userId: str
           </div>
           <div className="grid gap-2">
             <Label htmlFor="address">Address</Label>
-            <Textarea id="address" name="address" rows={2} maxLength={300} className="rounded-2xl" />
+            <Textarea
+              id="address"
+              name="address"
+              rows={2}
+              maxLength={300}
+              className="rounded-2xl border-slate-700 bg-slate-900"
+            />
           </div>
           {event.team_size > 1 && (
             <>
@@ -265,22 +390,26 @@ function RegisterDialog({ event, userId, email }: { event: EventRow; userId: str
                   rows={2}
                   maxLength={500}
                   placeholder="One name per line"
-                  className="rounded-2xl"
+                  className="rounded-2xl border-slate-700 bg-slate-900"
                 />
               </div>
             </>
           )}
-          <Field name="emergency_contact" label="Emergency contact" maxLength={15} />
 
           <Button
             type="submit"
             disabled={mutation.isPending}
-            className="mt-2 w-full rounded-full gradient-saffron text-primary-foreground"
+            className="mt-2 w-full rounded-full gradient-saffron text-slate-950 font-bold"
           >
-            {mutation.isPending ? "Registering…" : "Confirm registration"}
+            {mutation.isPending ? "Registering…" : "Confirm Registration"}
           </Button>
         </form>
       </DialogContent>
+      <RegistrationSuccessModal
+        open={successModalOpen}
+        onOpenChange={setSuccessModalOpen}
+        registration={confirmedReg}
+      />
     </Dialog>
   );
 }
@@ -293,7 +422,7 @@ function Field({
   return (
     <div className="grid gap-2">
       <Label htmlFor={name}>{label}</Label>
-      <Input id={name} name={name} className="rounded-2xl" {...props} />
+      <Input id={name} name={name} className="rounded-2xl border-slate-700 bg-slate-900 text-slate-100" {...props} />
     </div>
   );
 }

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#FF6B00" />
+    <title>Child Safety Standards — Shanthi Maha Ganapathi</title>
+    <meta
+      name="description"
+      content="Shanthi Maha Ganapathi Child Safety Standards (CSAE). Our zero-tolerance policy against child sexual abuse and exploitation, and reporting mechanisms."
+    />
+    <meta property="og:title" content="Child Safety Standards — Shanthi Maha Ganapathi" />
+    <meta
+      property="og:description"
+      content="Official Child Safety Standards policy for Shanthi Maha Ganapathi complying with Google Play Console CSAE requirements."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="robots" content="index, follow" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --radius: 1.25rem;
+        --background: #fbf8f5;
+        --foreground: #3d2319;
+        --card: #ffffff;
+        --card-foreground: #3d2319;
+        --primary: #dc4b0a;
+        --primary-foreground: #fff9f6;
+        --secondary: #f4ece4;
+        --secondary-foreground: #503126;
+        --muted: #f4ebe2;
+        --muted-foreground: #84685d;
+        --border: #e6d7c8;
+        --gradient-temple: linear-gradient(140deg, #b92b13, #dc4b0a 60%, #e6a014);
+        --shadow-warm: 0 18px 45px -22px rgba(185, 43, 19, 0.35);
+        --shadow-lift: 0 30px 60px -30px rgba(100, 30, 10, 0.4);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --background: #1c1411;
+          --foreground: #f6ebd8;
+          --card: #261d19;
+          --card-foreground: #f6ebd8;
+          --primary: #f2601d;
+          --primary-foreground: #1c1411;
+          --secondary: #332621;
+          --secondary-foreground: #f6ebd8;
+          --muted: #332621;
+          --muted-foreground: #bfa899;
+          --border: rgba(255, 255, 255, 0.12);
+          --shadow-warm: 0 18px 45px -22px rgba(0, 0, 0, 0.7);
+          --shadow-lift: 0 30px 60px -30px rgba(0, 0, 0, 0.8);
+        }
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        border-color: var(--border);
+      }
+      body {
+        background-color: var(--background);
+        color: var(--foreground);
+        font-family: "Outfit", ui-sans-serif, system-ui, sans-serif;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      h1, h2, h3, h4 {
+        font-family: "Poppins", ui-sans-serif, system-ui, sans-serif;
+        letter-spacing: -0.02em;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      .header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--border);
+      }
+      @media (prefers-color-scheme: dark) {
+        .header {
+          background: rgba(38, 29, 25, 0.85);
+        }
+      }
+      .header-container {
+        max-width: 80rem;
+        margin: 0 auto;
+        padding: 0.75rem 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .brand-img {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 1px solid rgba(230, 160, 20, 0.5);
+        object-fit: cover;
+      }
+      .brand-title {
+        font-family: "Poppins", sans-serif;
+        font-weight: 700;
+        font-size: 1.125rem;
+        line-height: 1.2;
+      }
+      .brand-sub {
+        font-size: 0.75rem;
+        color: var(--muted-foreground);
+      }
+      .nav-links {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+      }
+      .nav-link {
+        padding: 0.5rem 1rem;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: background-color 0.2s;
+      }
+      .nav-link:hover {
+        background-color: var(--secondary);
+      }
+      .main-content {
+        flex: 1;
+        max-width: 56rem;
+        margin: 0 auto;
+        padding: 3rem 1rem;
+        width: 100%;
+      }
+      .hero-banner {
+        background-image: var(--gradient-temple);
+        color: #ffffff;
+        border-radius: 1.5rem;
+        padding: 2.5rem 2rem;
+        box-shadow: var(--shadow-lift);
+      }
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #fde68a;
+      }
+      .hero-title {
+        font-size: 2.25rem;
+        font-weight: 800;
+        margin-top: 1rem;
+        color: #ffffff;
+      }
+      .hero-date {
+        margin-top: 0.75rem;
+        font-size: 0.875rem;
+        color: #fef3c7;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 1.25rem;
+        padding: 1.75rem;
+        margin-top: 2rem;
+        box-shadow: var(--shadow-warm);
+      }
+      .card-title {
+        font-size: 1.35rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+      }
+      .card-desc {
+        color: var(--muted-foreground);
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+      .commitment-list {
+        list-style: none;
+        display: grid;
+        gap: 0.75rem;
+        margin-top: 1.25rem;
+      }
+      .commitment-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.875rem;
+        background: var(--secondary);
+        padding: 1rem;
+        border-radius: 1rem;
+        font-weight: 500;
+        font-size: 1rem;
+      }
+      .check-icon {
+        color: var(--primary);
+        font-weight: 800;
+        font-size: 1.125rem;
+        line-height: 1;
+      }
+      .email-box {
+        margin-top: 1.25rem;
+        padding: 1.25rem;
+        border: 1px solid rgba(220, 75, 10, 0.3);
+        background: rgba(220, 75, 10, 0.05);
+        border-radius: 1rem;
+      }
+      .email-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--muted-foreground);
+      }
+      .email-link {
+        display: inline-block;
+        margin-top: 0.35rem;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--primary);
+        word-break: break-all;
+      }
+      .email-link:hover {
+        text-decoration: underline;
+      }
+      .footer {
+        margin-top: auto;
+        border-top: 1px solid var(--border);
+        background: var(--secondary);
+        padding: 2.5rem 1rem 1.5rem;
+      }
+      @media (max-width: 767px) {
+        .footer {
+          display: none !important;
+        }
+      }
+      .footer-bottom {
+        max-width: 80rem;
+        margin: 0 auto;
+        text-align: center;
+        font-size: 0.875rem;
+        color: var(--muted-foreground);
+      }
+      @media (min-width: 640px) {
+        .hero-title {
+          font-size: 2.75rem;
+        }
+        .card {
+          padding: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="header-container">
+        <a href="/" class="brand">
+          <img src="/assets/ganapathi-mark.png" alt="SHANTHI MAHA GANAPATHI emblem" class="brand-img" />
+          <div>
+            <div class="brand-title">SHANTHI MAHA GANAPATHI 2026</div>
+            <div class="brand-sub">2026 · Chitradurga</div>
+          </div>
+        </a>
+        <nav class="nav-links">
+          <a href="/" class="nav-link">Home</a>
+          <a href="/events" class="nav-link">Events</a>
+          <a href="/contact" class="nav-link">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="hero-banner">
+        <div class="hero-badge">🛡️ Safety &amp; Policy</div>
+        <h1 class="hero-title">Child Safety Standards</h1>
+        <div class="hero-date">Effective Date: August 5, 2026</div>
+      </div>
+
+      <section class="card">
+        <h2 class="card-title">Introduction</h2>
+        <p class="card-desc">
+          Shanthi Maha Ganapathi is committed to providing a safe environment for all users and has zero tolerance for child sexual abuse and exploitation (CSAE).
+        </p>
+      </section>
+
+      <section class="card">
+        <h2 class="card-title">Our Commitments</h2>
+        <ul class="commitment-list">
+          <li class="commitment-item">
+            <span class="check-icon">✓</span>
+            <span>We strictly prohibit Child Sexual Abuse Material (CSAM).</span>
+          </li>
+          <li class="commitment-item">
+            <span class="check-icon">✓</span>
+            <span>We prohibit grooming, exploitation, harassment, or abuse involving minors.</span>
+          </li>
+          <li class="commitment-item">
+            <span class="check-icon">✓</span>
+            <span>We remove any violating content immediately.</span>
+          </li>
+          <li class="commitment-item">
+            <span class="check-icon">✓</span>
+            <span>We permanently suspend users who violate these policies.</span>
+          </li>
+          <li class="commitment-item">
+            <span class="check-icon">✓</span>
+            <span>We cooperate with law enforcement whenever legally required.</span>
+          </li>
+          <li class="commitment-item">
+            <span class="check-icon">✓</span>
+            <span>We comply with Google Play Child Safety Standards.</span>
+          </li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2 class="card-title">Reporting Abuse</h2>
+        <p class="card-desc">
+          Users can report inappropriate content or suspected child exploitation by contacting us immediately.
+        </p>
+        <div class="email-box">
+          <div class="email-label">Contact Email</div>
+          <a href="mailto:support.shanthiseva@gmail.com" class="email-link">support.shanthiseva@gmail.com</a>
+        </div>
+      </section>
+
+      <section class="card" style="border-left: 4px solid var(--primary);">
+        <h2 class="card-title">Policy Statement</h2>
+        <p class="card-desc" style="font-weight: 600; color: var(--foreground);">
+          Any content involving child exploitation, abuse, or illegal activity is strictly prohibited and will result in immediate action.
+        </p>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-bottom">
+        &copy; 2026 Shanthi Maha Ganapathi. All Rights Reserved.
+      </div>
+    </footer>
+  </body>
+</html>

@@ -3,7 +3,7 @@ importScripts('https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js'
 importScripts('https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js');
 
 firebase.initializeApp({
-  apiKey: "AIzaSyD_PLACEHOLDER_KEY",
+  apiKey: "FIREBASE_API_KEY_PLACEHOLDER",
   authDomain: "ganapathi-utsav.firebaseapp.com",
   projectId: "ganapathi-utsav",
   storageBucket: "ganapathi-utsav.appspot.com",

@@ -17,10 +17,18 @@ dist-ssr
 *.local
 .env
 .env.*
+service-account*.json
+*-firebase-adminsdk-*.json
 
-# Wrangler / Cloudflare
+# Wrangler / Cloudflare & Secrets
 .wrangler/
 .dev.vars
+wrangler.secrets
+*.pem
+*.key
+*.p12
+*.crt
+*.pfx
 
 # Editor directories and files
 .vscode/*
@@ -32,3 +40,13 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Temporary / external directories
+supabase/.temp/
+SHANTHINAGARA/
+festival-fiesta-hub/
+com.shanthimahaganapathi.app
+.firebase/
+release/
+scratch/
+

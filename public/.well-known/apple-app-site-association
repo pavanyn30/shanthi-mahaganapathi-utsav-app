@@ -1,0 +1,56 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [
+          "*.com.shanthimahaganapathi.app",
+          "com.shanthimahaganapathi.app"
+        ],
+        "components": [
+          {
+            "/": "/video/*"
+          },
+          {
+            "/": "/event/*"
+          },
+          {
+            "/": "/schedule/*"
+          },
+          {
+            "/": "/notification/*"
+          },
+          {
+            "/": "/profile/*"
+          },
+          {
+            "/": "/events/*"
+          },
+          {
+            "/": "/gallery*"
+          },
+          {
+            "/": "/live*"
+          },
+          {
+            "/": "/notifications*"
+          },
+          {
+            "/": "/my-passes*"
+          },
+          {
+            "/": "/volunteer*"
+          },
+          {
+            "/": "/donate*"
+          },
+          {
+            "/": "/auth*"
+          },
+          {
+            "/": "/"
+          }
+        ]
+      }
+    ]
+  }
+}

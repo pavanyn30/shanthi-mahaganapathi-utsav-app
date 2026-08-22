@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { EventCard } from "@/components/site/EventCard";
+import { EventCard } from "@/components/features/events/EventCard";
 import { CATEGORY_LABELS, eventCountsQuery, eventsQuery } from "@/lib/festival";
 
 export const Route = createFileRoute("/events/")({
@@ -17,7 +17,10 @@ export const Route = createFileRoute("/events/")({
           "Dance, singing, drawing, cricket, kabaddi, quiz, rangoli, BGMI, Free Fire and more. Browse all competitions and register online.",
       },
       { property: "og:title", content: "Events & Competitions — Ganapathi Festival 2026" },
-      { property: "og:description", content: "Browse all 12 festival competitions and register online." },
+      {
+        property: "og:description",
+        content: "Browse all 12 festival competitions and register online.",
+      },
     ],
   }),
   component: EventsPage,
@@ -39,14 +42,18 @@ function EventsPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-      <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">Compete & celebrate</p>
-      <h1 className="mt-2 font-display text-3xl font-extrabold sm:text-4xl">Events & Competitions</h1>
+      <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
+        Compete & celebrate
+      </p>
+      <h1 className="mt-2 font-display text-3xl font-extrabold sm:text-4xl">
+        Events & Competitions
+      </h1>
       <p className="mt-3 max-w-2xl text-muted-foreground">
-        Pick an event, register in under a minute and download your QR pass. Entry is open to everyone in
-        the neighbourhood.
+        Pick an event, register in under a minute and download your QR pass. Entry is open to
+        everyone in the neighbourhood.
       </p>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+      <div className="mt-8">
         <div className="relative">
           <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -55,19 +62,6 @@ function EventsPage() {
             placeholder="Search events…"
             className="h-12 rounded-full pl-10"
           />
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {categories.map((c) => (
-            <Button
-              key={c}
-              size="sm"
-              variant={cat === c ? "default" : "outline"}
-              className="rounded-full"
-              onClick={() => setCat(c)}
-            >
-              {c === "all" ? "All" : (CATEGORY_LABELS[c] ?? c)}
-            </Button>
-          ))}
         </div>
       </div>
 

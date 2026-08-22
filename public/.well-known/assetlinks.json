@@ -1,0 +1,18 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.shanthimahaganapathi.app",
+      "sha256_cert_fingerprints": [
+        "00:79:AE:96:51:30:24:9F:C6:AD:B1:BE:FE:C6:5B:AB:05:1C:17:F8:9E:BC:1E:44:4E:A5:47:F0:3F:4B:F7:36",
+        "F0:42:B0:54:03:E7:36:5D:70:E8:62:87:9B:79:EE:62:D3:D7:A8:3C:64:13:CA:4E:06:06:27:23:60:94:55:47",
+        "EF:39:D1:E2:10:ED:A1:1D:BC:EB:40:78:0F:9B:FC:A4:FE:0D:F5:71:DC:DB:7A:D5:48:CF:55:AB:E2:2F:1D:4B",
+        "C4:B9:4A:00:DC:06:E9:06:8F:26:7D:0C:FD:89:BA:05:B1:15:31:12:62:21:76:F6:14:83:36:3F:B1:59:88:A9"
+      ]
+    }
+  }
+]
+

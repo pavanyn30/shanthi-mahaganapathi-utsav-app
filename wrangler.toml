@@ -1,0 +1,15 @@
+name = "ganesh-utsav-connect"
+compatibility_date = "2026-08-01"
+pages_build_output_dir = ".output/public"
+
+[site]
+bucket = ".output/public"
+
+[build]
+command = "npm run build"
+
+[env.production]
+name = "ganesh-utsav-connect-production"
+
+[env.preview]
+name = "ganesh-utsav-connect-preview"

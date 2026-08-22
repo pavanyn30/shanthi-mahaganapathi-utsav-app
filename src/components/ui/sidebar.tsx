@@ -171,6 +171,11 @@ const Sidebar = React.forwardRef<
   ) => {
     const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
 
+    // Prevent rendering any sidebar completely on mobile screens (<768px)
+    if (isMobile || (typeof window !== "undefined" && window.innerWidth < 768)) {
+      return null;
+    }
+
     if (collapsible === "none") {
       return (
         <div
@@ -261,7 +266,12 @@ const SidebarTrigger = React.forwardRef<
   React.ElementRef<typeof Button>,
   React.ComponentProps<typeof Button>
 >(({ className, onClick, ...props }, ref) => {
-  const { toggleSidebar } = useSidebar();
+  const { toggleSidebar, isMobile } = useSidebar();
+
+  // Prevent rendering the trigger completely on mobile screens (<768px)
+  if (isMobile || (typeof window !== "undefined" && window.innerWidth < 768)) {
+    return null;
+  }
 
   return (
     <Button
@@ -285,7 +295,12 @@ SidebarTrigger.displayName = "SidebarTrigger";
 
 const SidebarRail = React.forwardRef<HTMLButtonElement, React.ComponentProps<"button">>(
   ({ className, ...props }, ref) => {
-    const { toggleSidebar } = useSidebar();
+    const { toggleSidebar, isMobile } = useSidebar();
+
+    // Prevent rendering the rail completely on mobile screens (<768px)
+    if (isMobile || (typeof window !== "undefined" && window.innerWidth < 768)) {
+      return null;
+    }
 
     return (
       <button

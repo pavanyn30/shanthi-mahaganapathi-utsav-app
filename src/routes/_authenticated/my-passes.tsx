@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { QrPass } from "@/components/site/QrPass";
+import { QrPass } from "@/components/features/registrations/QrPass";
 import { useSession } from "@/hooks/use-session";
 import { myRegistrationsQuery } from "@/lib/festival";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,17 +12,47 @@ export const Route = createFileRoute("/_authenticated/my-passes")({
   head: () => ({
     meta: [
       { title: "My QR Passes — Ganapathi Festival 2026" },
-      { name: "description", content: "View and download your QR event passes for Ganapathi Festival 2026." },
+      {
+        name: "description",
+        content: "View and download your QR event passes for Ganapathi Festival 2026.",
+      },
       { property: "og:title", content: "My QR Passes — Ganapathi Festival 2026" },
-      { property: "og:description", content: "Your festival registrations and downloadable QR passes." },
+      {
+        property: "og:description",
+        content: "Your festival registrations and downloadable QR passes.",
+      },
     ],
   }),
   component: MyPasses,
 });
 
 function MyPasses() {
+  const queryClient = useQueryClient();
   const { user } = useSession();
   const { data: regs = [], isLoading } = useQuery(myRegistrationsQuery(user?.id));
+
+  const handleSignOut = async () => {
+    try {
+      sessionStorage.removeItem("pending_deep_link");
+      localStorage.removeItem("pending_deep_link");
+    } catch {}
+
+    try {
+      await supabase.auth.signOut();
+    } catch (e) {
+      console.warn("Sign out exception:", e);
+    }
+
+    try {
+      queryClient.clear();
+    } catch {}
+
+    toast.success("Signed out successfully");
+
+    if (typeof window !== "undefined") {
+      window.location.replace("/");
+    }
+  };
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
@@ -32,14 +62,11 @@ function MyPasses() {
           <h1 className="mt-2 font-display text-3xl font-extrabold">My QR passes</h1>
           <p className="mt-1 truncate text-sm text-muted-foreground">{user?.email}</p>
         </div>
+
         <Button
           variant="outline"
           className="shrink-0 rounded-full"
-          onClick={async () => {
-            await supabase.auth.signOut();
-            toast.success("Signed out");
-            window.location.href = "/";
-          }}
+          onClick={handleSignOut}
         >
           <LogOut className="mr-1.5 h-4 w-4" /> Sign out
         </Button>

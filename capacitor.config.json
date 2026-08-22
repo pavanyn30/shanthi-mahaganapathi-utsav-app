@@ -1,6 +1,23 @@
 {
-  "appId": "com.ganapathifestival.app",
+  "appId": "com.shanthimahaganapathi.app",
   "appName": "Ganapathi Festival",
   "webDir": ".output/public",
-  "bundledWebRuntime": false
+  "bundledWebRuntime": false,
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0,
+      "launchAutoHide": false,
+      "backgroundColor": "#000c24",
+      "androidScaleType": "CENTER_CROP",
+      "showSpinner": false
+    },
+    "GoogleAuth": {
+      "scopes": [
+        "profile",
+        "email"
+      ],
+      "serverClientId": "148252084027-5oacennrurg3sm36au42hv0iqpad7f3c.apps.googleusercontent.com",
+      "forceCodeForRefreshToken": false
+    }
+  }
 }

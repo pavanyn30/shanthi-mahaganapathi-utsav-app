@@ -263,7 +263,7 @@ CREATE POLICY "settings_staff_update" ON public.festival_settings FOR UPDATE TO 
   USING (public.is_staff(auth.uid())) WITH CHECK (public.is_staff(auth.uid()));
 
 INSERT INTO public.festival_settings (id, live_stream_url, upi_id, contact_phone, contact_email, address)
-VALUES (1, 'https://www.youtube.com/embed/videoseries?list=PLFgquLnL59alCl_2TQvOiD5Vgm1hCaGSI', 'ganapathimandal@upi', '+91 98860 12345', 'info@ganapathifest.in', 'Sri Ganapathi Mandal, Main Road, Bengaluru 560001');
+VALUES (1, 'https://www.youtube.com/embed/videoseries?list=PLFgquLnL59alCl_2TQvOiD5Vgm1hCaGSI', 'ganapathimandal@upi', '+91 98860 12345', 'info@ganapathifest.in', 'Sri Ganapathi Mandal, Main Road, Bengaluru 577501');
 
 -- SAMPLE DATA
 INSERT INTO public.events (name, slug, description, category, event_date, start_time, venue, max_participants, entry_fee, rules, prize_details, age_min, age_max, team_size, organizer_name, organizer_phone) VALUES
