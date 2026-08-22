@@ -173,7 +173,6 @@ function SchedulePage() {
         <div className="relative z-10 space-y-3">
           {/* DAILY PROGRAMME Subtitle */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-[0.2em] bg-amber-500/10 text-amber-500 border border-amber-500/30">
-            <Sparkles className="h-3.5 w-3.5" />
             <span>DAILY PROGRAMME</span>
           </div>
 
