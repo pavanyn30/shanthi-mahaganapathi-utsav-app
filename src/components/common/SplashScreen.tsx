@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { SplashScreen as NativeSplashScreen } from "@capacitor/splash-screen";
 import { settingsQuery } from "@/lib/festival";
+import { preloadWebsiteMediaInBackground } from "@/lib/utils/media-preloader";
 import splashImg from "@/assets/pavonix-splash.png";
 
 interface SplashScreenProps {
@@ -11,6 +12,11 @@ interface SplashScreenProps {
 
 export function SplashScreen({ onFinish, durationMs = 3000 }: SplashScreenProps) {
   const { data: settings } = useQuery(settingsQuery);
+
+  // Preload all website photos and videos in the background while splash screen is displaying
+  useEffect(() => {
+    preloadWebsiteMediaInBackground();
+  }, []);
 
   const [isVisible, setIsVisible] = useState(() => {
     if (typeof window !== "undefined") {

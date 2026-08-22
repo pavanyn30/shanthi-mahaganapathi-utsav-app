@@ -1,6 +1,6 @@
 {
   "appId": "com.shanthimahaganapathi.app",
-  "appName": "Ganapathi Festival",
+  "appName": "Shanthi Maha Ganapathi",
   "webDir": ".output/public",
   "bundledWebRuntime": false,
   "plugins": {
