@@ -353,20 +353,6 @@ function Home() {
                 </div>
               ))}
             </div>
-
-            {/* Bottom View All CTA Button */}
-            <div className="mt-8 text-center sm:text-left pl-14 sm:pl-20">
-              <Button
-                asChild
-                variant="outline"
-                className="rounded-full border-amber-500/40 hover:bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold text-xs px-6 py-2.5"
-              >
-                <Link to="/schedule">
-                  <span>View All 3 Days Schedule (14, 15, 16 Sep)</span>
-                  <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
-                </Link>
-              </Button>
-            </div>
           </div>
         </section>
 

@@ -186,20 +186,6 @@ function SchedulePage() {
             Complete timetable of daily poojas, Maha Aarti rituals, Annadana Mahaprasadam, cultural performances, and Visarjan processions for 14, 15, and 16 September 2026.
           </p>
         </div>
-
-        {/* Staff/Admin Schedule Upload Button */}
-        {isStaff && (
-          <div className="relative z-10 pt-5">
-            <Button
-              asChild
-              className="gradient-saffron text-primary-foreground font-bold text-xs px-5 py-2.5 rounded-full shadow-lg"
-            >
-              <Link to="/admin" search={{ tab: "schedules" }}>
-                <Settings className="mr-1.5 h-4 w-4" /> Manage &amp; Upload Schedule
-              </Link>
-            </Button>
-          </div>
-        )}
       </div>
 
       {/* Date Filter Tabs */}
