@@ -96,17 +96,51 @@ function Home() {
     [schedules],
   );
 
-  // Dynamic today's schedule filtering
+  // Dynamic time-based & date-based schedule auto-filtering for Homepage
   const todaySchedules = useMemo(() => {
-    const matched = publishedSchedules.filter((s) => s.schedule_date === today);
-    if (matched.length > 0) return matched;
+    const now = new Date();
+    const todayStr = now.toLocaleDateString("en-CA");
 
-    // Fallback if today's date is not in festival range (e.g. testing before Sep 14)
-    const sep14Items = publishedSchedules.filter((s) => s.schedule_date === "2026-09-14");
-    if (sep14Items.length > 0) return sep14Items;
+    // Helper: returns true if an event's start_time has passed + 30 min grace window
+    const isPassed = (item: (typeof publishedSchedules)[0]) => {
+      if (!item.schedule_date || !item.start_time) return false;
+      const [y, m, d] = item.schedule_date.split("-").map(Number);
+      const timeParts = item.start_time.split(":");
+      const hrs = parseInt(timeParts[0], 10);
+      const mins = parseInt(timeParts[1], 10);
 
-    return publishedSchedules.slice(0, 5);
-  }, [publishedSchedules, today]);
+      // Event cutoff = start_time + 30 minutes grace window
+      const cutoff = new Date(y, m - 1, d, hrs, mins + 30, 0, 0);
+      return now.getTime() > cutoff.getTime();
+    };
+
+    const dates = Array.from(new Set(publishedSchedules.map((s) => s.schedule_date))).sort();
+    if (dates.length === 0) return [];
+
+    let targetDate = dates.find((d) => d >= todayStr) || dates[dates.length - 1];
+
+    let activeItems = publishedSchedules
+      .filter((s) => s.schedule_date === targetDate)
+      .sort((a, b) => (a.start_time || "").localeCompare(b.start_time || ""));
+
+    if (todayStr === targetDate) {
+      const remainingToday = activeItems.filter((item) => !isPassed(item));
+
+      if (remainingToday.length > 0) {
+        return remainingToday;
+      }
+
+      // If ALL events for today have passed, auto-advance to next date's schedule
+      const nextDate = dates.find((d) => d > todayStr);
+      if (nextDate) {
+        return publishedSchedules
+          .filter((s) => s.schedule_date === nextDate)
+          .sort((a, b) => (a.start_time || "").localeCompare(b.start_time || ""));
+      }
+    }
+
+    return activeItems;
+  }, [publishedSchedules]);
 
   return (
     <>
