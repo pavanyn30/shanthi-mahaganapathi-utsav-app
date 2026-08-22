@@ -441,13 +441,6 @@ function ScheduleTimelineList({
                       {item.category || "pooja"}
                     </Badge>
                   </div>
-
-                  {item.venue && (
-                    <div className="flex items-center gap-1 text-xs font-semibold text-amber-600 dark:text-amber-400">
-                      <MapPin className="h-3.5 w-3.5 shrink-0" />
-                      <span>{item.venue}</span>
-                    </div>
-                  )}
                 </div>
 
                 <div>

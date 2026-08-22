@@ -376,11 +376,6 @@ function Home() {
                           {formatTime(s.start_time)}
                           {s.end_time ? ` – ${formatTime(s.end_time)}` : ""}
                         </span>
-                        {s.venue && (
-                          <span className="inline-flex items-center gap-1">
-                            <MapPin className="h-3.5 w-3.5 text-amber-500" /> {s.venue}
-                          </span>
-                        )}
                       </div>
                     </div>
                   </div>
