@@ -395,7 +395,7 @@ export const settingsQuery = {
       live_stream_url: null,
       upi_id: "mandal@upi",
       donation_goal: 500000,
-      contact_phone: "+91 98860 12345",
+      contact_phone: "+91 7483639318",
       contact_email: "info@shanthimahaganapthi.org",
       address: "Sri Ganapathi Mandal, Chitradurga",
     };

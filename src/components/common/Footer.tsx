@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Phone, Mail, MapPin, Sparkles, Code2, Heart } from "lucide-react";
 import { settingsQuery } from "@/lib/festival";
 import { DeveloperCreditModal } from "./DeveloperCreditModal";
+import { toast } from "sonner";
 
 export function Footer() {
   const { data: settings } = useQuery(settingsQuery);
@@ -79,15 +80,58 @@ export function Footer() {
             <ul className="mt-4 space-y-3 text-xs sm:text-sm text-foreground/80">
               <li className="flex items-start gap-2">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                <span>{settings?.address ?? "Sri Ganapathi Mandal, Chitradurga"}</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const addr = settings?.address ?? "Sri Ganapathi Mandal, Shanthinagara, Chitradurga";
+                    if (navigator.clipboard) navigator.clipboard.writeText(addr);
+                    toast.success("Address copied! Opening Google Maps...", { icon: "📍" });
+                    setTimeout(() => {
+                      window.open(`https://maps.google.com/?q=${encodeURIComponent(addr)}`, "_blank");
+                    }, 200);
+                  }}
+                  className="text-left hover:text-amber-500 hover:underline transition-colors"
+                  title="Click to copy & open Google Maps"
+                >
+                  <span>{settings?.address ?? "Sri Ganapathi Mandal, Chitradurga"}</span>
+                </button>
               </li>
               <li className="flex items-center gap-2">
-                <Phone className="h-4 w-4 shrink-0 text-primary" />
-                <span>{settings?.contact_phone ?? "+91 98860 12345"}</span>
+                <Phone className="h-4 w-4 shrink-0 text-primary animate-pulse" />
+                <button
+                  type="button"
+                  onClick={() => {
+                    const phone = settings?.contact_phone ?? "+91 7483639318";
+                    const cleanNumber = phone.replace(/[^0-9+]/g, "");
+                    if (navigator.clipboard) navigator.clipboard.writeText(phone);
+                    toast.success(`Copied ${phone}! Redirecting to call dialer...`, { icon: "📞" });
+                    setTimeout(() => {
+                      window.location.href = `tel:${cleanNumber}`;
+                    }, 200);
+                  }}
+                  className="text-left font-semibold text-foreground hover:text-amber-500 hover:underline transition-colors flex items-center gap-1.5"
+                  title="Click to copy phone & open dialer"
+                >
+                  <span>{settings?.contact_phone ?? "+91 7483639318"}</span>
+                </button>
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4 shrink-0 text-primary" />
-                <span>{settings?.contact_email ?? "info@shanthimahaganapathi.org"}</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const email = settings?.contact_email ?? "info@shanthimahaganapathi.org";
+                    if (navigator.clipboard) navigator.clipboard.writeText(email);
+                    toast.success(`Copied ${email}! Opening email app...`, { icon: "✉️" });
+                    setTimeout(() => {
+                      window.location.href = `mailto:${email}`;
+                    }, 200);
+                  }}
+                  className="text-left hover:text-amber-500 hover:underline transition-colors"
+                  title="Click to copy email & open mail client"
+                >
+                  <span>{settings?.contact_email ?? "info@shanthimahaganapathi.org"}</span>
+                </button>
               </li>
             </ul>
           </div>
