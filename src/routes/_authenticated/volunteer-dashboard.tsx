@@ -124,8 +124,9 @@ function VolunteerDashboardPage() {
 
   // Real-time listener for registrations updates (attendance, status)
   useEffect(() => {
+    const channelId = `registrations-seva-${Math.random().toString(36).slice(2, 7)}`;
     const channel = supabase
-      .channel("public:registrations-seva")
+      .channel(channelId)
       .on("postgres_changes", { event: "*", schema: "public", table: "registrations" }, () => {
         refetchRegs();
       })

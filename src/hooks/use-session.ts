@@ -164,10 +164,10 @@ export function useIsStaff(userId?: string) {
 
     checkStaffStatus();
 
-    // Subscribe to real-time role changes for this user
-    const validUuid = stringToUuid(userId);
+    // Subscribe to real-time role changes for this user with unique channel ID
+    const channelId = `user-roles-staff-${userId}-${Math.random().toString(36).slice(2, 7)}`;
     const channel = supabase
-      .channel(`user-roles-staff-${userId}`)
+      .channel(channelId)
       .on(
         "postgres_changes",
         {
@@ -282,9 +282,10 @@ export function useUserRolePermissions(userId?: string): UserRolePermissions {
 
     fetchPermissions();
 
-    // Subscribe to real-time user_roles changes
+    // Subscribe to real-time user_roles changes with unique channel ID
+    const permsChannelId = `user-roles-perms-${userId}-${Math.random().toString(36).slice(2, 7)}`;
     const channel = supabase
-      .channel(`user-roles-perms-${userId}`)
+      .channel(permsChannelId)
       .on(
         "postgres_changes",
         {

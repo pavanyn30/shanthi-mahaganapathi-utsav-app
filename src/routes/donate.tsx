@@ -321,8 +321,9 @@ export function DonatePage() {
 
   // Enable Realtime Sync on User Donations
   useEffect(() => {
+    const channelId = `donations-user-sync-${Math.random().toString(36).slice(2, 7)}`;
     const channel = supabase
-      .channel("public:donations_user_sync")
+      .channel(channelId)
       .on("postgres_changes", { event: "*", schema: "public", table: "donations" }, () => {
         refetchDonations();
         qc.invalidateQueries({ queryKey: ["user-donations"] });

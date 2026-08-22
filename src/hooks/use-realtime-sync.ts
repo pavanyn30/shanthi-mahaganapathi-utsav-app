@@ -83,8 +83,9 @@ export function useRealtimeSync(queryClient: QueryClient) {
     };
 
     // Initialize Supabase Realtime Channel (Postgres CDC + Realtime Broadcast)
+    const syncChannelId = `global-realtime-live-sync-${Math.random().toString(36).slice(2, 7)}`;
     const channel = supabase
-      .channel("global-realtime-live-sync")
+      .channel(syncChannelId)
       .on("postgres_changes", { event: "*", schema: "public" }, (payload) => {
         if (!isMounted) return;
         handleTableChange(payload.table, payload.eventType);

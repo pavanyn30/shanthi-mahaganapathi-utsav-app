@@ -164,8 +164,9 @@ export function GanapathiNotificationPopup() {
     };
     fetchLatest();
 
+    const notifChannelId = `homepage-notifs-${Math.random().toString(36).slice(2, 7)}`;
     const channel = supabase
-      .channel("homepage-ganapathi-realtime-notifications")
+      .channel(notifChannelId)
       .on(
         "postgres_changes",
         {
