@@ -37,21 +37,21 @@ export function Footer() {
                   : new Date("2026-09-14");
                 const eDate = settings?.end_date
                   ? new Date(settings.end_date)
-                  : new Date("2026-09-24");
+                  : new Date("2026-09-16");
                 const diffTime = Math.abs(eDate.getTime() - sDate.getTime());
                 const days = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1);
                 const dayWords: Record<number, string> = {
-                  1: "One",
-                  2: "Two",
-                  3: "Three",
-                  4: "Four",
-                  5: "Five",
-                  6: "Six",
-                  7: "Seven",
-                  8: "Eight",
-                  9: "Nine",
-                  10: "Ten",
-                  11: "Eleven",
+                  1: "1",
+                  2: "2",
+                  3: "3",
+                  4: "4",
+                  5: "5",
+                  6: "6",
+                  7: "7",
+                  8: "8",
+                  9: "9",
+                  10: "10",
+                  11: "11",
                 };
                 const word = dayWords[days] || `${days}`;
                 return `${word} days of devotion, culture, sport and community. Organised by Sri Ganapathi Mandal with hundreds of volunteers and well-wishers.`;

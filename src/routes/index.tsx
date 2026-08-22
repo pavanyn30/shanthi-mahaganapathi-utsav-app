@@ -188,21 +188,21 @@ function Home() {
                   : new Date("2026-09-14");
                 const eDate = settings?.end_date
                   ? new Date(settings.end_date)
-                  : new Date("2026-09-24");
+                  : new Date("2026-09-16");
                 const diffTime = Math.abs(eDate.getTime() - sDate.getTime());
                 const days = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1);
                 const dayWords: Record<number, string> = {
-                  1: "One",
-                  2: "Two",
-                  3: "Three",
-                  4: "Four",
-                  5: "Five",
-                  6: "Six",
-                  7: "Seven",
-                  8: "Eight",
-                  9: "Nine",
-                  10: "Ten",
-                  11: "Eleven",
+                  1: "1",
+                  2: "2",
+                  3: "3",
+                  4: "4",
+                  5: "5",
+                  6: "6",
+                  7: "7",
+                  8: "8",
+                  9: "9",
+                  10: "10",
+                  11: "11",
                 };
                 const word = dayWords[days] || `${days}`;
                 return `${word} days of aarti, culture, sport and seva. Register for competitions, collect your QR pass, and celebrate with the whole neighbourhood.`;
@@ -328,7 +328,7 @@ function Home() {
         <section id="schedule" className="py-12 scroll-mt-20">
           <div className="mb-6 space-y-2">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30">
-              <span>14 – 24 September 2026 · Chitradurga</span>
+              <span>14 – 16 September 2026 · Chitradurga</span>
             </div>
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
               Daily programme

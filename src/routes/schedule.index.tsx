@@ -173,7 +173,7 @@ function SchedulePage() {
         <div className="relative z-10 space-y-3">
           {/* ABOVE DAILY PROGRAMME: Date & Location Badge */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold bg-amber-500/15 text-amber-400 border border-amber-500/30 shadow-sm">
-            <span>14 – 24 September 2026 · Chitradurga</span>
+            <span>14 – 16 September 2026 · Chitradurga</span>
           </div>
 
           {/* DAILY PROGRAMME Subtitle Badge */}
