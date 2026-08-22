@@ -663,7 +663,7 @@ export const galleryQuery = {
     const res = unwrap<GalleryItem[]>(
       await supabase.from("gallery_items").select("*").order("created_at", { ascending: false }),
     );
-    return res && res.length > 0 ? res : DEFAULT_GALLERY_ITEMS;
+    return res || [];
   },
 };
 

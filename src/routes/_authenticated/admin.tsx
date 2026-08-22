@@ -743,7 +743,7 @@ function AdminPage() {
   const deleteGalleryItem = async (id: string) => {
     const { error } = await supabase.from("gallery_items").delete().eq("id", id);
     if (error) return toast.error(error.message);
-    toast.success("Gallery photo removed");
+    toast.success("Gallery media permanently deleted from database!");
     qc.invalidateQueries({ queryKey: ["gallery"] });
   };
 
